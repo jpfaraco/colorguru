@@ -3,7 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--secondary-bg);
+  background: var(--primary-bg);
   padding: 0 3rem 3rem 3rem;
 }
 
@@ -14,13 +14,13 @@
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
-  background: var(--secondary-bg);
+  background: var(--primary-bg);
 }
 
 .graph-content {
   flex: 1;
   position: relative;
-  background: var(--secondary-bg);
+  background: var(--primary-bg);
 }
 
 .graph-curve-svg {
@@ -47,7 +47,7 @@
   z-index: 2;
   transform: translate(-50%, 50%);
   border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
 }
 
 .graph-dot:hover {
@@ -58,16 +58,13 @@
 .dot-value {
   font-size: 0.75rem;
   font-weight: 600;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   margin: 2px -4px 0 -4px;
   line-height: 1;
 }
 
 .dot-step {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0.8;
   margin-top: 2px;
   line-height: 1;
 }

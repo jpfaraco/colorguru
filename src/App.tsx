@@ -99,7 +99,10 @@ function App() {
             <div className="control-section">
               <h3>Major Steps</h3>
               <div className="control-group">
-                <label>Total</label>
+                <div className="label-row">
+                  <label>Total</label>
+                  <span className="slider-value">{colorState.steps}</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -111,7 +114,6 @@ function App() {
                       steps: parseInt(e.target.value)
                     }))}
                   />
-                  <span className="slider-value">{colorState.steps}</span>
                 </div>
               </div>
             </div>
@@ -120,7 +122,10 @@ function App() {
             <div className="control-section">
               <h3>Hue</h3>
               <div className="control-group">
-                <label>Start</label>
+                <div className="label-row">
+                  <label>Start</label>
+                  <span className="slider-value">{colorState.hue.start}°</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -133,11 +138,13 @@ function App() {
                       hue: { ...prev.hue, start: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.hue.start}</span>
                 </div>
               </div>
               <div className="control-group">
-                <label>End</label>
+                <div className="label-row">
+                  <label>End</label>
+                  <span className="slider-value">{colorState.hue.end}°</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -150,7 +157,6 @@ function App() {
                       hue: { ...prev.hue, end: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.hue.end}</span>
                 </div>
               </div>
               <div className="control-group">
@@ -172,7 +178,10 @@ function App() {
             <div className="control-section">
               <h3>Saturation</h3>
               <div className="control-group">
-                <label>Start</label>
+                <div className="label-row">
+                  <label>Start</label>
+                  <span className="slider-value">{colorState.saturation.start}%</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -184,11 +193,13 @@ function App() {
                       saturation: { ...prev.saturation, start: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.saturation.start}</span>
                 </div>
               </div>
               <div className="control-group">
-                <label>End</label>
+                <div className="label-row">
+                  <label>End</label>
+                  <span className="slider-value">{colorState.saturation.end}%</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -200,11 +211,13 @@ function App() {
                       saturation: { ...prev.saturation, end: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.saturation.end}</span>
                 </div>
               </div>
               <div className="control-group">
-                <label>Rate</label>
+                <div className="label-row">
+                  <label>Rate</label>
+                  <span className="slider-value">{colorState.saturation.rate.toFixed(1)}</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -217,7 +230,6 @@ function App() {
                       saturation: { ...prev.saturation, rate: parseFloat(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.saturation.rate.toFixed(1)}</span>
                 </div>
               </div>
               <div className="control-group">
@@ -239,7 +251,10 @@ function App() {
             <div className="control-section">
               <h3>Brightness</h3>
               <div className="control-group">
-                <label>Start</label>
+                <div className="label-row">
+                  <label>Start</label>
+                  <span className="slider-value">{colorState.brightness.start}%</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -251,11 +266,13 @@ function App() {
                       brightness: { ...prev.brightness, start: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.brightness.start}</span>
                 </div>
               </div>
               <div className="control-group">
-                <label>End</label>
+                <div className="label-row">
+                  <label>End</label>
+                  <span className="slider-value">{colorState.brightness.end}%</span>
+                </div>
                 <div className="slider-container">
                   <input 
                     type="range" 
@@ -267,7 +284,6 @@ function App() {
                       brightness: { ...prev.brightness, end: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.brightness.end}</span>
                 </div>
               </div>
               <div className="control-group">

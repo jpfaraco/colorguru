@@ -402,6 +402,10 @@ export const Graph: React.FC<GraphProps> = ({
           const leftPercent = ((point.x - padding.left) / chartWidth) * 100;
           const bottomPercent = ((padding.top + chartHeight - point.y) / chartHeight) * 100;
           
+          // Determine best contrast color for text
+          const color = colors[i];
+          const textColor = color && color.contrastRatioWhite > color.contrastRatioBlack ? '#ffffff' : '#000000';
+          
           return (
             <div
               key={`point-${i}`}
@@ -412,13 +416,13 @@ export const Graph: React.FC<GraphProps> = ({
                 backgroundColor: colors[i]?.hex || '#8b5cf6'
               }}
             >
-              <div className="dot-value">
+              <div className="dot-value" style={{ color: textColor }}>
                 {activeGraph === 'sat-bri' ? 
                   `${Math.round(point.value)}, ${Math.round((point as any).yValue || 0)}` : 
                   Math.round(point.value)
                 }
               </div>
-              <div className="dot-step">
+              <div className="dot-step" style={{ color: textColor }}>
                 {point.index}
               </div>
             </div>
