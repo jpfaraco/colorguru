@@ -17,7 +17,7 @@ export interface PaletteData {
   colors: ColorStep[];
   hueValues: number[];
   saturationValues: number[];
-  luminosityValues: number[];
+  brightnessValues: number[];
   luminanceValues: number[];
 }
 
@@ -36,17 +36,17 @@ function rgbToLuminance(r: number, g: number, b: number): number {
 }
 
 export function generatePalette(colorState: ColorState): PaletteData {
-  const { steps, hue, saturation, luminosity } = colorState;
+  const { steps, hue, saturation, brightness } = colorState;
   const colors: ColorStep[] = [];
   const hueValues: number[] = [];
   const saturationValues: number[] = [];
-  const luminosityValues: number[] = [];
+  const brightnessValues: number[] = [];
   const luminanceValues: number[] = [];
 
   // Get easing functions
   const hueEasing = getEasingFunction(hue.curve);
   const saturationEasing = getEasingFunction(saturation.curve);
-  const luminosityEasing = getEasingFunction(luminosity.curve);
+  const brightnessEasing = getEasingFunction(brightness.curve);
 
   for (let i = 0; i < steps; i++) {
     // Calculate progress (0 to 1)
@@ -55,12 +55,12 @@ export function generatePalette(colorState: ColorState): PaletteData {
     // Apply easing to get curved progress values
     const hueProgress = hueEasing(progress);
     const satProgress = saturationEasing(progress);
-    const lumProgress = luminosityEasing(progress);
+    const briProgress = brightnessEasing(progress);
 
     // Interpolate values
     const h = interpolateHue(hue.start, hue.end, hueProgress);
     const s = interpolateLinear(saturation.start, saturation.end, satProgress) * saturation.rate;
-    const l = interpolateLinear(luminosity.start, luminosity.end, lumProgress);
+    const l = interpolateLinear(brightness.start, brightness.end, briProgress);
 
     // Clamp values to valid ranges
     const clampedS = Math.max(0, Math.min(100, s));
@@ -93,7 +93,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     colors.push(colorStep);
     hueValues.push(h);
     saturationValues.push(clampedS);
-    luminosityValues.push(clampedL);
+    brightnessValues.push(clampedL);
     luminanceValues.push(luminance * 100); // Convert to percentage for easier display
   }
 
@@ -101,7 +101,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     colors,
     hueValues,
     saturationValues,
-    luminosityValues,
+    brightnessValues,
     luminanceValues,
   };
 }

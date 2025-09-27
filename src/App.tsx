@@ -20,7 +20,7 @@ export interface ColorState {
     curve: string;
     rate: number;
   };
-  luminosity: {
+  brightness: {
     start: number;
     end: number;
     curve: string;
@@ -41,14 +41,14 @@ function App() {
       curve: 'Quad - EaseIn',
       rate: 1
     },
-    luminosity: {
+    brightness: {
       start: 80,
       end: 20,
       curve: 'Quad - EaseIn'
     }
   });
 
-  const [activeGraph, setActiveGraph] = useState<'hue' | 'saturation' | 'luminosity' | 'luminance'>('hue');
+  const [activeGraph, setActiveGraph] = useState<'hue' | 'saturation' | 'brightness' | 'luminance' | 'sat-bri'>('hue');
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Generate palette data
@@ -74,7 +74,7 @@ function App() {
         curve: 'Quad - EaseIn',
         rate: 1
       },
-      luminosity: {
+      brightness: {
         start: 80,
         end: 20,
         curve: 'Quad - EaseIn'
@@ -237,7 +237,7 @@ function App() {
             </div>
 
             <div className="control-section">
-              <h3>Luminosity</h3>
+              <h3>Brightness</h3>
               <div className="control-group">
                 <label>Start</label>
                 <div className="slider-container">
@@ -245,13 +245,13 @@ function App() {
                     type="range" 
                     min="0" 
                     max="100" 
-                    value={colorState.luminosity.start}
+                    value={colorState.brightness.start}
                     onChange={(e) => setColorState(prev => ({
                       ...prev, 
-                      luminosity: { ...prev.luminosity, start: parseInt(e.target.value) }
+                      brightness: { ...prev.brightness, start: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.luminosity.start}</span>
+                  <span className="slider-value">{colorState.brightness.start}</span>
                 </div>
               </div>
               <div className="control-group">
@@ -261,22 +261,22 @@ function App() {
                     type="range" 
                     min="0" 
                     max="100" 
-                    value={colorState.luminosity.end}
+                    value={colorState.brightness.end}
                     onChange={(e) => setColorState(prev => ({
                       ...prev, 
-                      luminosity: { ...prev.luminosity, end: parseInt(e.target.value) }
+                      brightness: { ...prev.brightness, end: parseInt(e.target.value) }
                     }))}
                   />
-                  <span className="slider-value">{colorState.luminosity.end}</span>
+                  <span className="slider-value">{colorState.brightness.end}</span>
                 </div>
               </div>
               <div className="control-group">
                 <label>Curve</label>
                 <select 
-                  value={colorState.luminosity.curve}
+                  value={colorState.brightness.curve}
                   onChange={(e) => setColorState(prev => ({
                     ...prev, 
-                    luminosity: { ...prev.luminosity, curve: e.target.value }
+                    brightness: { ...prev.brightness, curve: e.target.value }
                   }))}
                 >
                   {curveNames.map(name => (
@@ -304,16 +304,22 @@ function App() {
               Saturation
             </button>
             <button 
-              className={activeGraph === 'luminosity' ? 'active' : ''}
-              onClick={() => setActiveGraph('luminosity')}
+              className={activeGraph === 'brightness' ? 'active' : ''}
+              onClick={() => setActiveGraph('brightness')}
             >
-              Luminosity
+              Brightness
             </button>
             <button 
               className={activeGraph === 'luminance' ? 'active' : ''}
               onClick={() => setActiveGraph('luminance')}
             >
               Luminance
+            </button>
+            <button 
+              className={activeGraph === 'sat-bri' ? 'active' : ''}
+              onClick={() => setActiveGraph('sat-bri')}
+            >
+              Sat × Bri
             </button>
           </div>
           <Graph paletteData={paletteData} activeGraph={activeGraph} />
