@@ -4,7 +4,7 @@ import './Graph.css';
 
 interface GraphProps {
   paletteData: PaletteData;
-  activeGraph: 'hue' | 'saturation' | 'luminosity';
+  activeGraph: 'hue' | 'saturation' | 'luminosity' | 'luminance';
   width?: number;
   height?: number;
 }
@@ -15,7 +15,7 @@ export const Graph: React.FC<GraphProps> = ({
   width = 600,
   height = 400
 }) => {
-  const { colors, hueValues, saturationValues, luminosityValues } = paletteData;
+  const { colors, hueValues, saturationValues, luminosityValues, luminanceValues } = paletteData;
 
   const graphData = useMemo(() => {
     switch (activeGraph) {
@@ -43,6 +43,14 @@ export const Graph: React.FC<GraphProps> = ({
           unit: '%',
           label: 'Luminosity'
         };
+      case 'luminance':
+        return {
+          values: luminanceValues,
+          maxValue: 100,
+          minValue: 0,
+          unit: '%',
+          label: 'Luminance'
+        };
       default:
         return {
           values: hueValues,
@@ -52,7 +60,7 @@ export const Graph: React.FC<GraphProps> = ({
           label: 'Hue'
         };
     }
-  }, [activeGraph, hueValues, saturationValues, luminosityValues]);
+  }, [activeGraph, hueValues, saturationValues, luminosityValues, luminanceValues]);
 
   const padding = { top: 80, right: 80, bottom: 80, left: 80 };
   const chartWidth = width - padding.left - padding.right;

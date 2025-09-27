@@ -48,7 +48,7 @@ function App() {
     }
   });
 
-  const [activeGraph, setActiveGraph] = useState<'hue' | 'saturation' | 'luminosity'>('hue');
+  const [activeGraph, setActiveGraph] = useState<'hue' | 'saturation' | 'luminosity' | 'luminance'>('hue');
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Generate palette data
@@ -308,6 +308,12 @@ function App() {
               onClick={() => setActiveGraph('luminosity')}
             >
               Luminosity
+            </button>
+            <button 
+              className={activeGraph === 'luminance' ? 'active' : ''}
+              onClick={() => setActiveGraph('luminance')}
+            >
+              Luminance
             </button>
           </div>
           <Graph paletteData={paletteData} activeGraph={activeGraph} />

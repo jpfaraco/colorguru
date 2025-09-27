@@ -18,10 +18,22 @@ export interface PaletteData {
   hueValues: number[];
   saturationValues: number[];
   luminosityValues: number[];
+  luminanceValues: number[];
 }
 
 const WHITE_RGB: RGB = { r: 255, g: 255, b: 255 };
 const BLACK_RGB: RGB = { r: 0, g: 0, b: 0 };
+
+// RGB to Luminance function using WCAG formula
+function rgbToLuminance(r: number, g: number, b: number): number {
+  const [rs, gs, bs] = [r, g, b].map(function (v) {
+    v /= 255;
+    return v <= 0.03928
+      ? v / 12.92
+      : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return rs * 0.2126 + gs * 0.7152 + bs * 0.0722;
+}
 
 export function generatePalette(colorState: ColorState): PaletteData {
   const { steps, hue, saturation, luminosity } = colorState;
@@ -29,6 +41,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
   const hueValues: number[] = [];
   const saturationValues: number[] = [];
   const luminosityValues: number[] = [];
+  const luminanceValues: number[] = [];
 
   // Get easing functions
   const hueEasing = getEasingFunction(hue.curve);
@@ -57,6 +70,9 @@ export function generatePalette(colorState: ColorState): PaletteData {
     const rgbColor = hslToRgb(hslColor);
     const hexColor = hslToHex(hslColor);
 
+    // Calculate luminance using WCAG formula
+    const luminance = rgbToLuminance(rgbColor.r, rgbColor.g, rgbColor.b);
+
     // Calculate contrast ratios and WCAG compliance
     const contrastRatioWhite = getContrastRatio(rgbColor, WHITE_RGB);
     const contrastRatioBlack = getContrastRatio(rgbColor, BLACK_RGB);
@@ -78,6 +94,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     hueValues.push(h);
     saturationValues.push(clampedS);
     luminosityValues.push(clampedL);
+    luminanceValues.push(luminance * 100); // Convert to percentage for easier display
   }
 
   return {
@@ -85,6 +102,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     hueValues,
     saturationValues,
     luminosityValues,
+    luminanceValues,
   };
 }
 
