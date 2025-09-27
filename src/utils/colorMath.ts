@@ -64,17 +64,29 @@ export function normalizeHue(hue: number): number {
   return hue;
 }
 
-export function interpolateHue(start: number, end: number, progress: number): number {
+export function interpolateHue(start: number, end: number, progress: number, longPath: boolean = false): number {
   start = normalizeHue(start);
   end = normalizeHue(end);
   
-  // Calculate the shortest path around the color wheel
   let diff = end - start;
-  if (Math.abs(diff) > 180) {
-    if (diff > 0) {
-      diff = diff - 360;
-    } else {
-      diff = diff + 360;
+  
+  if (longPath) {
+    // Take the longer path around the color wheel
+    if (Math.abs(diff) <= 180) {
+      if (diff >= 0) {
+        diff = diff - 360;
+      } else {
+        diff = diff + 360;
+      }
+    }
+  } else {
+    // Take the shorter path around the color wheel (original behavior)
+    if (Math.abs(diff) > 180) {
+      if (diff > 0) {
+        diff = diff - 360;
+      } else {
+        diff = diff + 360;
+      }
     }
   }
   

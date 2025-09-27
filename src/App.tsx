@@ -13,6 +13,7 @@ export interface ColorState {
     start: number;
     end: number;
     curve: string;
+    longPath: boolean;
   };
   saturation: {
     start: number;
@@ -33,7 +34,8 @@ function App() {
     hue: {
       start: 180,
       end: 270,
-      curve: 'Quad - EaseIn'
+      curve: 'Quad - EaseIn',
+      longPath: false
     },
     saturation: {
       start: 50,
@@ -66,7 +68,8 @@ function App() {
       hue: {
         start: 180,
         end: 270,
-        curve: 'Quad - EaseIn'
+        curve: 'Quad - EaseIn',
+        longPath: false
       },
       saturation: {
         start: 50,
@@ -172,6 +175,21 @@ function App() {
                     <option key={name} value={name}>{name}</option>
                   ))}
                 </select>
+              </div>
+              <div className="control-group">
+                <div className="checkbox-container">
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox"
+                      checked={colorState.hue.longPath}
+                      onChange={(e) => setColorState(prev => ({
+                        ...prev,
+                        hue: { ...prev.hue, longPath: e.target.checked }
+                      }))}
+                    />
+                    Long path interpolation
+                  </label>
+                </div>
               </div>
             </div>
 

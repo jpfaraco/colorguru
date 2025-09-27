@@ -58,7 +58,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     const briProgress = brightnessEasing(progress);
 
     // Interpolate values
-    const h = interpolateHue(hue.start, hue.end, hueProgress);
+    const h = interpolateHue(hue.start, hue.end, hueProgress, hue.longPath);
     const s = interpolateLinear(saturation.start, saturation.end, satProgress) * saturation.rate;
     const l = interpolateLinear(brightness.start, brightness.end, briProgress);
 
