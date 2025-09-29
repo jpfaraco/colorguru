@@ -110,6 +110,60 @@ export function getEasingFunction(curveName: string): EasingFunction {
   return curve ? curve.func : quadEaseIn; // Default fallback
 }
 
+// Cubic-bezier implementation based on WebKit implementation
+// Returns an easing function for given control points.
+export function getCubicBezier(x1: number, y1: number, x2: number, y2: number): EasingFunction {
+  // Clamp Xs to [0,1] as per CSS specification.
+  const cx = 3.0 * x1;
+  const bx = 3.0 * (x2 - x1) - cx;
+  const ax = 1.0 - cx - bx;
+
+  const cy = 3.0 * y1;
+  const by = 3.0 * (y2 - y1) - cy;
+  const ay = 1.0 - cy - by;
+
+  function sampleCurveX(t: number): number {
+    return ((ax * t + bx) * t + cx) * t;
+  }
+  function sampleCurveY(t: number): number {
+    return ((ay * t + by) * t + cy) * t;
+  }
+  function sampleCurveDerivativeX(t: number): number {
+    return (3.0 * ax * t + 2.0 * bx) * t + cx;
+  }
+
+  function solveCurveX(x: number): number {
+    // Use Newton-Raphson iteration first
+    let t2 = x;
+    for (let i = 0; i < 8; i++) {
+      const x2 = sampleCurveX(t2) - x;
+      const d2 = sampleCurveDerivativeX(t2);
+      if (Math.abs(x2) < 1e-6) return t2;
+      if (Math.abs(d2) < 1e-6) break;
+      t2 = t2 - x2 / d2;
+    }
+    // Fall back to bisection method
+    let t0 = 0.0;
+    let t1 = 1.0;
+    t2 = x;
+    while (t0 < t1) {
+      const x2 = sampleCurveX(t2);
+      if (Math.abs(x2 - x) < 1e-6) return t2;
+      if (x > x2) t0 = t2; else t1 = t2;
+      t2 = (t1 - t0) * 0.5 + t0;
+    }
+    return t2;
+  }
+
+  return function cubicBezierAt(x: number): number {
+    if (x <= 0) return sampleCurveY(0);
+    if (x >= 1) return sampleCurveY(1);
+    const t = solveCurveX(x);
+    return sampleCurveY(t);
+  };
+}
+
 export function getCurveNames(): string[] {
-  return Object.keys(EASING_CURVES);
+  // Include a special Custom option at the end
+  return [...Object.keys(EASING_CURVES), 'Custom'];
 }

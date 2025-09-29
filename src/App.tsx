@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import "./App.css";
 import { Graph } from "./components/Graph";
+import BezierEditor from "./components/BezierEditor";
 import { PalettePreview } from "./components/PalettePreview";
 import { ExportModal } from "./components/ExportModal";
 import { generatePalette } from "./utils/paletteGenerator";
@@ -15,17 +16,20 @@ export interface ColorState {
     end: number;
     curve: string;
     longPath: boolean;
+    custom?: { x1: number; y1: number; x2: number; y2: number };
   };
   saturation: {
     start: number;
     end: number;
     curve: string;
     rate: number;
+    custom?: { x1: number; y1: number; x2: number; y2: number };
   };
   brightness: {
     start: number;
     end: number;
     curve: string;
+    custom?: { x1: number; y1: number; x2: number; y2: number };
   };
 }
 
@@ -225,6 +229,7 @@ function App() {
                       </option>
                     ))}
                   </select>
+                  {colorState.hue.curve === "Custom" && <BezierEditor value={colorState.hue.custom || { x1: 0.2, y1: 0, x2: 0.8, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, hue: { ...prev.hue, custom } }))} />}
                 </div>
                 <div className="control-group">
                   <div className="checkbox-container">
@@ -330,6 +335,7 @@ function App() {
                       </option>
                     ))}
                   </select>
+                  {colorState.saturation.curve === "Custom" && <BezierEditor value={colorState.saturation.custom || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, saturation: { ...prev.saturation, custom } }))} />}
                 </div>
               </div>
             </div>
@@ -397,6 +403,7 @@ function App() {
                       </option>
                     ))}
                   </select>
+                  {colorState.brightness.curve === "Custom" && <BezierEditor value={colorState.brightness.custom || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, brightness: { ...prev.brightness, custom } }))} />}
                 </div>
               </div>
             </div>

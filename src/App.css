@@ -197,6 +197,12 @@ body {
   padding-bottom: 0;
 }
 
+/* Allow embedded editors to render fully within panels */
+.control-section .bezier-editor {
+  /* ensure content isn't clipped by max-height when expanded */
+  overflow: visible;
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;

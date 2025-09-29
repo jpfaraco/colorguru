@@ -1,6 +1,6 @@
 import { ColorState } from '../App';
 import { HSL, RGB, hslToHex, hslToRgb, interpolateHue, interpolateLinear, getContrastRatio, getWCAGLevel } from './colorMath';
-import { getEasingFunction } from './easingCurves';
+import { getCubicBezier, getEasingFunction } from './easingCurves';
 
 export interface ColorStep {
   index: number;
@@ -43,10 +43,18 @@ export function generatePalette(colorState: ColorState): PaletteData {
   const brightnessValues: number[] = [];
   const luminanceValues: number[] = [];
 
-  // Get easing functions
-  const hueEasing = getEasingFunction(hue.curve);
-  const saturationEasing = getEasingFunction(saturation.curve);
-  const brightnessEasing = getEasingFunction(brightness.curve);
+  // Get easing functions (support Custom cubic-bezier)
+  const hueEasing = hue.curve === 'Custom' && (hue as any).custom
+    ? getCubicBezier((hue as any).custom.x1, (hue as any).custom.y1, (hue as any).custom.x2, (hue as any).custom.y2)
+    : getEasingFunction(hue.curve);
+
+  const saturationEasing = saturation.curve === 'Custom' && (saturation as any).custom
+    ? getCubicBezier((saturation as any).custom.x1, (saturation as any).custom.y1, (saturation as any).custom.x2, (saturation as any).custom.y2)
+    : getEasingFunction(saturation.curve);
+
+  const brightnessEasing = brightness.curve === 'Custom' && (brightness as any).custom
+    ? getCubicBezier((brightness as any).custom.x1, (brightness as any).custom.y1, (brightness as any).custom.x2, (brightness as any).custom.y2)
+    : getEasingFunction(brightness.curve);
 
   for (let i = 0; i < steps; i++) {
     // Calculate progress (0 to 1)
