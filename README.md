@@ -9,9 +9,8 @@ A powerful web application for generating accessible, visually consistent color 
 - **Curve Presets**: 20+ presets (Sine, Quad, Cubic, Quart, Quint, Expo, Circ, Back, Linear) based on cubic‑bezier parameters from easings.net
 - **Dynamic Graph Visualization**: Toggle between hue, saturation, and luminosity graphs
 - **Accessibility**: WCAG compliance indicators and contrast ratio calculations
-- **Export Options**: CSS variables, JSON, and plain text formats
+- **Export Options**: CSS variables, JSON, plain text, and Figma-ready SVG formats
 - **Copy to Clipboard**: One-click copying of individual hex values
-- **Professional UI**: Clean, modern interface optimized for designers and developers
 - **Multilanguage UI**: Language switcher with instant translations
 
 ## Getting Started
@@ -55,8 +54,12 @@ The built files will be available in the `dist` directory.
 5. **Curve Editor**: Drag the two handles or type `x1`, `y1`, `x2`, `y2` values. Y can go below 0 or above 1 (for Back‑style overshoot). Changes update the palette in real time
 6. **Graph View**: Switch between Hue, Saturation, Brightness, Luminance, or Sat×Bri visualizations
 7. **Palette Preview**: View generated colors with contrast ratios and WCAG levels
-8. **Export**: Click the "Export" button to save your palette in various formats
-9. **Language**: Use the language selector in the header to switch translations instantly
+8. **Export**: Click the "Export" button to save your palette in various formats:
+   - **CSS**: CSS custom properties (variables)
+   - **JSON**: Complete palette data with settings and accessibility info
+   - **Plain Text**: Simple list of hex codes
+   - **Figma**: SVG code ready to paste directly into Figma
+9. **Figma workflow**: Select the "Figma" tab in the Export dialog, copy the SVG code, then paste (Cmd/Ctrl+V) directly on your Figma canvas. The palette will appear as a row of rectangles, so you can quickly apply the colors to your components before committing to a final style sheet or color variables.
 
 ## Color Math
 
