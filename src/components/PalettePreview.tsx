@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ColorStep, copyToClipboard } from '../utils/paletteGenerator';
+import { Tooltip } from './Tooltip';
 import './PalettePreview.css';
 
 interface PalettePreviewProps {
@@ -37,6 +38,16 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
     };
   };
 
+  const getWcagTooltip = (level: string) => {
+    switch (level) {
+      case 'AAA': return 'AAA: Enhanced contrast (7:1+ ratio)';
+      case 'AA': return 'AA: Standard contrast (4.5:1+ ratio)';
+      case 'A': return 'A: Minimum contrast (3:1+ ratio)';
+      case 'Fail': return 'Fail: Below minimum contrast (<3:1)';
+      default: return `WCAG ${level} compliance level`;
+    }
+  };
+
   if (!colors.length) {
     return (
       <div className="palette-preview">
@@ -71,10 +82,14 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
                 <div className="color-info">
                   <div className="color-details">
                     <span className="lightness-value">{color.hsl.l.toFixed(0)}b</span>
-                    <span className="contrast-value">{accessibilityInfo.ratio.toFixed(1)}w</span>
-                    <span className={`wcag-rating wcag-${accessibilityInfo.level.toLowerCase()}`}>
-                      {accessibilityInfo.level}
-                    </span>
+                    <Tooltip content={`Contrast ratio: ${accessibilityInfo.ratio.toFixed(1)}:1 with best background`}>
+                      <span className="contrast-value">{accessibilityInfo.ratio.toFixed(1)}w</span>
+                    </Tooltip>
+                    <Tooltip content={getWcagTooltip(accessibilityInfo.level)}>
+                      <span className={`wcag-rating wcag-${accessibilityInfo.level.toLowerCase()}`}>
+                        {accessibilityInfo.level}
+                      </span>
+                    </Tooltip>
                     <span 
                       className={`color-hex ${copiedIndex === index ? 'copied' : ''}`}
                       onClick={() => handleCopyHex(color.hex, index)}
