@@ -188,6 +188,9 @@ body {
   max-height: 1000px;
   opacity: 1;
   padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .section-content.collapsed {

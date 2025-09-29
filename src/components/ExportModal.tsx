@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { PaletteData, exportAsCSS, exportAsJSON, exportAsPlainText, copyToClipboard } from '../utils/paletteGenerator';
-import { getTranslation } from '../utils/translations';
-import { ColorState } from '../App';
-import './ExportModal.css';
+import React, { useState } from "react";
+import { PaletteData, exportAsCSS, exportAsJSON, exportAsPlainText, exportAsSVG, copyToClipboard } from "../utils/paletteGenerator";
+import { getTranslation } from "../utils/translations";
+import { ColorState } from "../App";
+import "./ExportModal.css";
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -12,32 +12,28 @@ interface ExportModalProps {
   language?: string;
 }
 
-type ExportFormat = 'css' | 'json' | 'text';
+type ExportFormat = "css" | "json" | "text" | "svg";
 
-export const ExportModal: React.FC<ExportModalProps> = ({
-  isOpen,
-  onClose,
-  paletteData,
-  colorState,
-  language = 'en'
-}) => {
-  const [activeFormat, setActiveFormat] = useState<ExportFormat>('css');
+export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, paletteData, colorState, language = "en" }) => {
+  const [activeFormat, setActiveFormat] = useState<ExportFormat>("css");
   const [copied, setCopied] = useState(false);
 
-  const t = (key: keyof import('../utils/translations').TranslationKeys) => getTranslation(language, key);
+  const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
 
   if (!isOpen) return null;
 
   const getExportData = () => {
     switch (activeFormat) {
-      case 'css':
+      case "css":
         return exportAsCSS(paletteData);
-      case 'json':
+      case "json":
         return exportAsJSON(paletteData, colorState);
-      case 'text':
+      case "text":
         return exportAsPlainText(paletteData);
+      case "svg":
+        return exportAsSVG(paletteData);
       default:
-        return '';
+        return "";
     }
   };
 
@@ -47,15 +43,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      console.error("Failed to copy to clipboard:", error);
     }
   };
 
   const handleDownload = () => {
     const data = getExportData();
-    const blob = new Blob([data], { type: 'text/plain' });
+    const blob = new Blob([data], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `color-palette.${activeFormat}`;
     document.body.appendChild(a);
@@ -74,67 +70,52 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     <div className="export-modal-backdrop" onClick={handleBackdropClick}>
       <div className="export-modal">
         <div className="export-modal-header">
-          <h2>{t('exportTitle')}</h2>
+          <h2>{t("exportTitle")}</h2>
           <button className="close-button" onClick={onClose}>
             ×
           </button>
         </div>
 
         <div className="export-format-tabs">
-          <button
-            className={`format-tab ${activeFormat === 'css' ? 'active' : ''}`}
-            onClick={() => setActiveFormat('css')}
-          >
-            {t('css')}
+          <button className={`format-tab ${activeFormat === "css" ? "active" : ""}`} onClick={() => setActiveFormat("css")}>
+            {t("css")}
           </button>
-          <button
-            className={`format-tab ${activeFormat === 'json' ? 'active' : ''}`}
-            onClick={() => setActiveFormat('json')}
-          >
-            {t('json')}
+          <button className={`format-tab ${activeFormat === "json" ? "active" : ""}`} onClick={() => setActiveFormat("json")}>
+            {t("json")}
           </button>
-          <button
-            className={`format-tab ${activeFormat === 'text' ? 'active' : ''}`}
-            onClick={() => setActiveFormat('text')}
-          >
-            {t('plainText')}
+          <button className={`format-tab ${activeFormat === "text" ? "active" : ""}`} onClick={() => setActiveFormat("text")}>
+            {t("plainText")}
+          </button>
+          <button className={`format-tab ${activeFormat === "svg" ? "active" : ""}`} onClick={() => setActiveFormat("svg")}>
+            Figma
           </button>
         </div>
 
         <div className="export-content">
           <div className="export-preview">
-            <pre className="export-code">
-              {getExportData()}
-            </pre>
+            <pre className="export-code">{getExportData()}</pre>
           </div>
         </div>
 
         <div className="export-actions">
-          <button
-            className="copy-button"
-            onClick={handleCopy}
-            disabled={copied}
-          >
-            {copied ? `✓ ${t('copied')}` : t('copy')}
+          <button className="copy-button" onClick={handleCopy} disabled={copied}>
+            {copied ? `✓ ${t("copied")}` : t("copy")}
           </button>
-          <button
-            className="download-button"
-            onClick={handleDownload}
-          >
-            Download File
+          <button className="download-button" onClick={handleDownload}>
+            {t("downloadFile")}
           </button>
         </div>
 
         <div className="palette-summary-export">
           <div className="summary-stats">
             <span className="stat">
-              <strong>{paletteData.colors.length}</strong> {t('totalColors').toLowerCase()}
+              <strong>{paletteData.colors.length}</strong> {t("totalColors").toLowerCase()}
             </span>
             <span className="stat">
-              <strong>{paletteData.colors.filter(c => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 4.5).length}</strong> WCAG AA compliant
+              <strong>{paletteData.colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 4.5).length}</strong> WCAG AA compliant
             </span>
             <span className="stat">
-              <strong>{paletteData.colors.filter(c => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 7).length}</strong> WCAG AAA compliant
+              <strong>{paletteData.colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 7).length}</strong> WCAG AAA compliant
             </span>
           </div>
         </div>

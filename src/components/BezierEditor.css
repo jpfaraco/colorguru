@@ -21,8 +21,10 @@
 .bezier-inputs label {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
   font-size: 0.8rem;
   color: var(--text-secondary);
+  margin-top: 0;
 }
 
 .bezier-inputs label:nth-child(1),

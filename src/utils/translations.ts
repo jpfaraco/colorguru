@@ -38,6 +38,7 @@ export interface TranslationKeys {
   wcagAA: string;
   wcagA: string;
   wcagFail: string;
+  withBestBackground: string;
   
   // Export Modal
   exportTitle: string;
@@ -47,6 +48,7 @@ export interface TranslationKeys {
   close: string;
   copy: string;
   copied: string;
+  downloadFile: string;
   
   // Language
   language: string;
@@ -86,6 +88,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Standard contrast (4.5:1+ ratio)",
     wcagA: "A: Minimum contrast (3:1+ ratio)",
     wcagFail: "Fail: Below minimum contrast (<3:1)",
+    withBestBackground: "with the best background",
     
     exportTitle: "Export Palette",
     css: "CSS",
@@ -94,6 +97,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Close",
     copy: "Copy",
     copied: "Copied!",
+    downloadFile: "Download File",
     
     language: "Language",
   },
@@ -130,6 +134,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Contraste estándar (relación 4.5:1+)",
     wcagA: "A: Contraste mínimo (relación 3:1+)",
     wcagFail: "Fallo: Por debajo del contraste mínimo (<3:1)",
+    withBestBackground: "con el mejor fondo",
     
     exportTitle: "Exportar Paleta",
     css: "CSS",
@@ -138,6 +143,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Cerrar",
     copy: "Copiar",
     copied: "¡Copiado!",
+    downloadFile: "Descargar archivo",
     
     language: "Idioma",
   },
@@ -174,6 +180,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Contraste standard (ratio 4.5:1+)",
     wcagA: "A: Contraste minimum (ratio 3:1+)",
     wcagFail: "Échec: En dessous du contraste minimum (<3:1)",
+    withBestBackground: "avec le meilleur arrière-plan",
     
     exportTitle: "Exporter la Palette",
     css: "CSS",
@@ -182,6 +189,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Fermer",
     copy: "Copier",
     copied: "Copié!",
+    downloadFile: "Télécharger le fichier",
     
     language: "Langue",
   },
@@ -218,6 +226,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Standard Kontrast (4.5:1+ Verhältnis)",
     wcagA: "A: Mindestkontrast (3:1+ Verhältnis)",
     wcagFail: "Fehlgeschlagen: Unter Mindestkontrast (<3:1)",
+    withBestBackground: "mit dem besten Hintergrund",
     
     exportTitle: "Palette Exportieren",
     css: "CSS",
@@ -226,6 +235,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Schließen",
     copy: "Kopieren",
     copied: "Kopiert!",
+    downloadFile: "Datei herunterladen",
     
     language: "Sprache",
   },
@@ -262,6 +272,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Contraste padrão (proporção 4.5:1+)",
     wcagA: "A: Contraste mínimo (proporção 3:1+)",
     wcagFail: "Falha: Abaixo do contraste mínimo (<3:1)",
+    withBestBackground: "com o melhor fundo",
     
     exportTitle: "Exportar Paleta",
     css: "CSS",
@@ -270,6 +281,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Fechar",
     copy: "Copiar",
     copied: "Copiado!",
+    downloadFile: "Baixar arquivo",
     
     language: "Idioma",
   },
@@ -306,6 +318,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: 标准对比度 (4.5:1+ 比例)",
     wcagA: "A: 最小对比度 (3:1+ 比例)",
     wcagFail: "失败: 低于最小对比度 (<3:1)",
+    withBestBackground: "在最佳背景下",
     
     exportTitle: "导出调色板",
     css: "CSS",
@@ -314,6 +327,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "关闭",
     copy: "复制",
     copied: "已复制！",
+    downloadFile: "下载文件",
     
     language: "语言",
   },
@@ -350,6 +364,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: 標準コントラスト (4.5:1+ 比)",
     wcagA: "A: 最小コントラスト (3:1+ 比)",
     wcagFail: "不合格: 最小コントラスト未満 (<3:1)",
+    withBestBackground: "最適な背景で",
     
     exportTitle: "パレットをエクスポート",
     css: "CSS",
@@ -358,6 +373,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "閉じる",
     copy: "コピー",
     copied: "コピーしました！",
+    downloadFile: "ファイルをダウンロード",
     
     language: "言語",
   },
@@ -394,6 +410,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: मानक कंट्रास्ट (4.5:1+ अनुपात)",
     wcagA: "A: न्यूनतम कंट्रास्ट (3:1+ अनुपात)",
     wcagFail: "असफल: न्यूनतम कंट्रास्ट से कम (<3:1)",
+    withBestBackground: "सर्वोत्तम पृष्ठभूमि के साथ",
     
     exportTitle: "पैलेट निर्यात करें",
     css: "CSS",
@@ -402,6 +419,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "बंद करें",
     copy: "कॉपी",
     copied: "कॉपी किया गया!",
+    downloadFile: "फ़ाइल डाउनलोड करें",
     
     language: "भाषा",
   },
@@ -438,6 +456,7 @@ export const translations: Record<string, TranslationKeys> = {
     wcagAA: "AA: Стандартный контраст (соотношение 4.5:1+)",
     wcagA: "A: Минимальный контраст (соотношение 3:1+)",
     wcagFail: "Неудача: Ниже минимального контраста (<3:1)",
+    withBestBackground: "с лучшим фоном",
     
     exportTitle: "Экспорт Палитры",
     css: "CSS",
@@ -446,6 +465,7 @@ export const translations: Record<string, TranslationKeys> = {
     close: "Закрыть",
     copy: "Копировать",
     copied: "Скопировано!",
+    downloadFile: "Скачать файл",
     
     language: "Язык",
   },
@@ -456,7 +476,7 @@ export const languageOptions = [
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'pt-br', name: 'Português (BR)', flag: '🇧🇷' },
+  { code: 'pt-br', name: 'Português', flag: '🇧🇷' },
   { code: 'zh', name: '中文', flag: '🇨🇳' },
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },

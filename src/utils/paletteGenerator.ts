@@ -149,3 +149,29 @@ export function exportAsPlainText(palette: PaletteData): string {
 export function copyToClipboard(text: string): Promise<void> {
   return navigator.clipboard.writeText(text);
 }
+
+// Build an SVG string suitable for pasting into Figma. Produces a single row
+// of rounded rectangles sized 40x40 with 8px spacing and 8px corner radius.
+export function exportAsSVG(palette: PaletteData): string {
+  const swatchSize = 40;
+  const gap = 8;
+  const rx = 8;
+  const count = palette.colors.length;
+  const width = count > 0 ? count * swatchSize + (count - 1) * gap : swatchSize;
+  const height = swatchSize;
+
+  // Timestamp id: YYYYMMDD-HHMMSS in local time
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const id = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+  const rects = palette.colors.map((c, i) => {
+    const x = i * (swatchSize + gap);
+    const hex = c.hex.replace('#', '').toUpperCase();
+    return `<rect x="${x}" width="${swatchSize}" height="${swatchSize}" rx="${rx}" fill="#${hex}" id="${hex}"/>`;
+  }).join('\n');
+
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg" id="${id}">
+${rects}
+</svg>`;
+}
