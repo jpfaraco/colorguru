@@ -58,7 +58,7 @@ export interface TranslationKeys {
 
 export const translations: Record<string, TranslationKeys> = {
   en: {
-    appName: "Color Guru",
+    appName: "🌈️ Color Guru",
     reset: "Reset",
     export: "Export",
     
@@ -106,7 +106,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "Language",
   },
   es: {
-    appName: "Color Guru",
+    appName: "🌈️ Color Guru",
     reset: "Restablecer",
     export: "Exportar",
     
@@ -154,7 +154,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "Idioma",
   },
   fr: {
-    appName: "Color Guru",
+    appName: "🌈️ Color Guru",
     reset: "Réinitialiser",
     export: "Exporter",
     
@@ -202,7 +202,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "Langue",
   },
   de: {
-    appName: "Color Guru",
+    appName: "🌈️ Color Guru",
     reset: "Zurücksetzen",
     export: "Exportieren",
     
@@ -250,7 +250,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "Sprache",
   },
   "pt-br": {
-    appName: "Color Guru",
+    appName: "🌈️ Color Guru",
     reset: "Redefinir",
     export: "Exportar",
     
@@ -298,7 +298,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "Idioma",
   },
   zh: {
-    appName: "色彩大师",
+    appName: "🌈️ 色彩大师",
     reset: "重置",
     export: "导出",
     
@@ -346,7 +346,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "语言",
   },
   ja: {
-    appName: "カラーグル",
+    appName: "🌈️ カラーグル",
     reset: "リセット",
     export: "エクスポート",
     
@@ -394,7 +394,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "言語",
   },
   hi: {
-    appName: "रंग गुरु",
+    appName: "🌈️ रंग गुरु",
     reset: "रीसेट",
     export: "निर्यात",
     
@@ -442,7 +442,7 @@ export const translations: Record<string, TranslationKeys> = {
     language: "भाषा",
   },
   ru: {
-    appName: "Цветовой Гуру",
+    appName: "🌈️ Цветовой Гуру",
     reset: "Сброс",
     export: "Экспорт",
     
