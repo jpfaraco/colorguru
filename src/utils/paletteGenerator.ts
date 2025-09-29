@@ -140,10 +140,21 @@ export function exportAsJSON(palette: PaletteData, colorState: ColorState): stri
   }, null, 2);
 }
 
-export function exportAsPlainText(palette: PaletteData): string {
-  return palette.colors.map((color, index) => 
-    `${index + 1}. ${color.hex}`
-  ).join('\n');
+export interface PlainTextExportOptions {
+  numbered?: boolean;
+  includeHash?: boolean;
+}
+
+export function exportAsPlainText(palette: PaletteData, options: PlainTextExportOptions = {}): string {
+  const { numbered = true, includeHash = true } = options;
+
+  return palette.colors
+    .map((color, index) => {
+      const label = numbered ? `${index + 1}. ` : "";
+      const hex = includeHash ? color.hex : color.hex.replace(/^#/, "");
+      return `${label}${hex}`;
+    })
+    .join('\n');
 }
 
 export function copyToClipboard(text: string): Promise<void> {

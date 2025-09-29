@@ -17,6 +17,8 @@ type ExportFormat = "css" | "json" | "text" | "svg";
 export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, paletteData, colorState, language = "en" }) => {
   const [activeFormat, setActiveFormat] = useState<ExportFormat>("css");
   const [copied, setCopied] = useState(false);
+  const [plainTextNumbered, setPlainTextNumbered] = useState(true);
+  const [plainTextIncludeHash, setPlainTextIncludeHash] = useState(true);
 
   const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
 
@@ -29,7 +31,10 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, palet
       case "json":
         return exportAsJSON(paletteData, colorState);
       case "text":
-        return exportAsPlainText(paletteData);
+        return exportAsPlainText(paletteData, {
+          numbered: plainTextNumbered,
+          includeHash: plainTextIncludeHash,
+        });
       case "svg":
         return exportAsSVG(paletteData);
       default:
@@ -98,12 +103,34 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, palet
         </div>
 
         <div className="export-actions">
-          <button className="copy-button" onClick={handleCopy} disabled={copied}>
-            {copied ? `✓ ${t("copied")}` : t("copy")}
-          </button>
-          <button className="download-button" onClick={handleDownload}>
-            {t("downloadFile")}
-          </button>
+          {activeFormat === "text" && (
+            <div className="export-options">
+              <label className="export-option">
+                <input
+                  type="checkbox"
+                  checked={plainTextNumbered}
+                  onChange={(event) => setPlainTextNumbered(event.target.checked)}
+                />
+                {t("numbered")}
+              </label>
+              <label className="export-option">
+                <input
+                  type="checkbox"
+                  checked={plainTextIncludeHash}
+                  onChange={(event) => setPlainTextIncludeHash(event.target.checked)}
+                />
+                {t("includeHash")}
+              </label>
+            </div>
+          )}
+          <div className="export-buttons">
+            <button className="copy-button" onClick={handleCopy} disabled={copied}>
+              {copied ? `✓ ${t("copied")}` : t("copy")}
+            </button>
+            <button className="download-button" onClick={handleDownload}>
+              {t("downloadFile")}
+            </button>
+          </div>
         </div>
 
         <div className="palette-summary-export">

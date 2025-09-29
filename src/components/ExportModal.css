@@ -121,7 +121,32 @@
   border-top: 1px solid var(--border-color);
   display: flex;
   gap: 0.75rem;
-  justify-content: flex-end;
+  align-items: center;
+}
+
+.export-options {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.export-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.export-option input {
+  width: 16px;
+  height: 16px;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
 .copy-button,
@@ -217,5 +242,17 @@
   
   .export-actions {
     flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .export-options {
+    justify-content: flex-start;
+  }
+
+  .export-buttons {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
   }
 }

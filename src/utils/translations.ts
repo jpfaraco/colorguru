@@ -49,6 +49,8 @@ export interface TranslationKeys {
   copy: string;
   copied: string;
   downloadFile: string;
+  numbered: string;
+  includeHash: string;
   
   // Language
   language: string;
@@ -98,7 +100,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "Copy",
     copied: "Copied!",
     downloadFile: "Download File",
-    
+    numbered: "Numbered",
+    includeHash: "Include #",
+
     language: "Language",
   },
   es: {
@@ -142,9 +146,11 @@ export const translations: Record<string, TranslationKeys> = {
     plainText: "Texto Plano",
     close: "Cerrar",
     copy: "Copiar",
-    copied: "¡Copiado!",
-    downloadFile: "Descargar archivo",
-    
+   copied: "¡Copiado!",
+   downloadFile: "Descargar archivo",
+    numbered: "Numerado",
+    includeHash: "Incluir #",
+
     language: "Idioma",
   },
   fr: {
@@ -190,7 +196,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "Copier",
     copied: "Copié!",
     downloadFile: "Télécharger le fichier",
-    
+    numbered: "Numéroté",
+    includeHash: "Inclure #",
+
     language: "Langue",
   },
   de: {
@@ -236,7 +244,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "Kopieren",
     copied: "Kopiert!",
     downloadFile: "Datei herunterladen",
-    
+    numbered: "Nummeriert",
+    includeHash: "Mit #",
+
     language: "Sprache",
   },
   "pt-br": {
@@ -282,7 +292,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "Copiar",
     copied: "Copiado!",
     downloadFile: "Baixar arquivo",
-    
+    numbered: "Numerado",
+    includeHash: "Incluir #",
+
     language: "Idioma",
   },
   zh: {
@@ -328,7 +340,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "复制",
     copied: "已复制！",
     downloadFile: "下载文件",
-    
+    numbered: "编号",
+    includeHash: "包含#",
+
     language: "语言",
   },
   ja: {
@@ -374,7 +388,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "コピー",
     copied: "コピーしました！",
     downloadFile: "ファイルをダウンロード",
-    
+    numbered: "番号付き",
+    includeHash: "「#」を含める",
+
     language: "言語",
   },
   hi: {
@@ -420,7 +436,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "कॉपी",
     copied: "कॉपी किया गया!",
     downloadFile: "फ़ाइल डाउनलोड करें",
-    
+    numbered: "क्रमांकित",
+    includeHash: "# शामिल करें",
+
     language: "भाषा",
   },
   ru: {
@@ -466,7 +484,9 @@ export const translations: Record<string, TranslationKeys> = {
     copy: "Копировать",
     copied: "Скопировано!",
     downloadFile: "Скачать файл",
-    
+    numbered: "Нумерованный",
+    includeHash: "Включать #",
+
     language: "Язык",
   },
 };
