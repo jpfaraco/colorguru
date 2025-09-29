@@ -213,6 +213,23 @@ function App() {
                   </div>
                 </div>
                 <div className="control-group">
+                  <div className="checkbox-container">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={colorState.hue.longPath}
+                        onChange={(e) =>
+                          setColorState((prev) => ({
+                            ...prev,
+                            hue: { ...prev.hue, longPath: e.target.checked },
+                          }))
+                        }
+                      />
+                      {t("longPathInterpolation")}
+                    </label>
+                  </div>
+                </div>
+                <div className="control-group">
                   <label>{t("curve")}</label>
                   <select
                     value={colorState.hue.curve}
@@ -230,23 +247,6 @@ function App() {
                     ))}
                   </select>
                   {colorState.hue.curve === "Custom" && <BezierEditor value={colorState.hue.custom || { x1: 0.2, y1: 0, x2: 0.8, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, hue: { ...prev.hue, custom } }))} />}
-                </div>
-                <div className="control-group">
-                  <div className="checkbox-container">
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={colorState.hue.longPath}
-                        onChange={(e) =>
-                          setColorState((prev) => ({
-                            ...prev,
-                            hue: { ...prev.hue, longPath: e.target.checked },
-                          }))
-                        }
-                      />
-                      {t("longPathInterpolation")}
-                    </label>
-                  </div>
                 </div>
               </div>
             </div>

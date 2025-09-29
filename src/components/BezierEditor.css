@@ -25,6 +25,16 @@
   color: var(--text-secondary);
 }
 
+.bezier-inputs label:nth-child(1),
+.bezier-inputs label:nth-child(2) {
+  color: #2563eb;
+}
+
+.bezier-inputs label:nth-child(3),
+.bezier-inputs label:nth-child(4) {
+  color: #f97316;
+}
+
 .bezier-inputs input[type="number"] {
   padding: 0.35rem 0.5rem;
   border: 1px solid var(--border-color);
