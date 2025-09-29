@@ -43,16 +43,16 @@ export function generatePalette(colorState: ColorState): PaletteData {
   const brightnessValues: number[] = [];
   const luminanceValues: number[] = [];
 
-  // Get easing functions (support Custom cubic-bezier)
-  const hueEasing = hue.curve === 'Custom' && (hue as any).custom
+  // Get easing functions - prefer custom cubic-bezier when provided
+  const hueEasing = (hue as any).custom
     ? getCubicBezier((hue as any).custom.x1, (hue as any).custom.y1, (hue as any).custom.x2, (hue as any).custom.y2)
     : getEasingFunction(hue.curve);
 
-  const saturationEasing = saturation.curve === 'Custom' && (saturation as any).custom
+  const saturationEasing = (saturation as any).custom
     ? getCubicBezier((saturation as any).custom.x1, (saturation as any).custom.y1, (saturation as any).custom.x2, (saturation as any).custom.y2)
     : getEasingFunction(saturation.curve);
 
-  const brightnessEasing = brightness.curve === 'Custom' && (brightness as any).custom
+  const brightnessEasing = (brightness as any).custom
     ? getCubicBezier((brightness as any).custom.x1, (brightness as any).custom.y1, (brightness as any).custom.x2, (brightness as any).custom.y2)
     : getEasingFunction(brightness.curve);
 

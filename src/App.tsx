@@ -2,10 +2,10 @@ import { useState, useMemo } from "react";
 import "./App.css";
 import { Graph } from "./components/Graph";
 import BezierEditor from "./components/BezierEditor";
+import { CURVE_PRESETS, getCurveNames } from "./utils/easingCurves";
 import { PalettePreview } from "./components/PalettePreview";
 import { ExportModal } from "./components/ExportModal";
 import { generatePalette } from "./utils/paletteGenerator";
-import { getCurveNames } from "./utils/easingCurves";
 import { getTranslation, languageOptions } from "./utils/translations";
 
 // Types
@@ -234,10 +234,14 @@ function App() {
                   <select
                     value={colorState.hue.curve}
                     onChange={(e) =>
-                      setColorState((prev) => ({
-                        ...prev,
-                        hue: { ...prev.hue, curve: e.target.value },
-                      }))
+                      setColorState((prev) => {
+                        const curve = e.target.value;
+                        const preset = CURVE_PRESETS[curve];
+                        return {
+                          ...prev,
+                          hue: preset ? { ...prev.hue, curve, custom: preset } : { ...prev.hue, curve },
+                        };
+                      })
                     }
                   >
                     {curveNames.map((name) => (
@@ -246,7 +250,7 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  {colorState.hue.curve === "Custom" && <BezierEditor value={colorState.hue.custom || { x1: 0.2, y1: 0, x2: 0.8, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, hue: { ...prev.hue, custom } }))} />}
+                  <BezierEditor value={colorState.hue.custom || CURVE_PRESETS[colorState.hue.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, hue: { ...prev.hue, custom } }))} />
                 </div>
               </div>
             </div>
@@ -323,10 +327,14 @@ function App() {
                   <select
                     value={colorState.saturation.curve}
                     onChange={(e) =>
-                      setColorState((prev) => ({
-                        ...prev,
-                        saturation: { ...prev.saturation, curve: e.target.value },
-                      }))
+                      setColorState((prev) => {
+                        const curve = e.target.value;
+                        const preset = CURVE_PRESETS[curve];
+                        return {
+                          ...prev,
+                          saturation: preset ? { ...prev.saturation, curve, custom: preset } : { ...prev.saturation, curve },
+                        };
+                      })
                     }
                   >
                     {curveNames.map((name) => (
@@ -335,7 +343,7 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  {colorState.saturation.curve === "Custom" && <BezierEditor value={colorState.saturation.custom || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, saturation: { ...prev.saturation, custom } }))} />}
+                  <BezierEditor value={colorState.saturation.custom || CURVE_PRESETS[colorState.saturation.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, saturation: { ...prev.saturation, custom } }))} />
                 </div>
               </div>
             </div>
@@ -391,10 +399,14 @@ function App() {
                   <select
                     value={colorState.brightness.curve}
                     onChange={(e) =>
-                      setColorState((prev) => ({
-                        ...prev,
-                        brightness: { ...prev.brightness, curve: e.target.value },
-                      }))
+                      setColorState((prev) => {
+                        const curve = e.target.value;
+                        const preset = CURVE_PRESETS[curve];
+                        return {
+                          ...prev,
+                          brightness: preset ? { ...prev.brightness, curve, custom: preset } : { ...prev.brightness, curve },
+                        };
+                      })
                     }
                   >
                     {curveNames.map((name) => (
@@ -403,7 +415,7 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  {colorState.brightness.curve === "Custom" && <BezierEditor value={colorState.brightness.custom || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, brightness: { ...prev.brightness, custom } }))} />}
+                  <BezierEditor value={colorState.brightness.custom || CURVE_PRESETS[colorState.brightness.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, brightness: { ...prev.brightness, custom } }))} />
                 </div>
               </div>
             </div>

@@ -58,7 +58,7 @@ export const translations: Record<string, TranslationKeys> = {
     reset: "Reset",
     export: "Export",
     
-    numberOfColors: "Number of Colors",
+    numberOfColors: "Number of colors",
     hue: "Hue",
     saturation: "Saturation",
     brightness: "Brightness",
@@ -102,7 +102,7 @@ export const translations: Record<string, TranslationKeys> = {
     reset: "Restablecer",
     export: "Exportar",
     
-    numberOfColors: "Número de Colores",
+    numberOfColors: "Número de colores",
     hue: "Matiz",
     saturation: "Saturación",
     brightness: "Brillo",
@@ -146,7 +146,7 @@ export const translations: Record<string, TranslationKeys> = {
     reset: "Réinitialiser",
     export: "Exporter",
     
-    numberOfColors: "Nombre de Couleurs",
+    numberOfColors: "Nombre de couleurs",
     hue: "Teinte",
     saturation: "Saturation",
     brightness: "Luminosité",
@@ -234,7 +234,7 @@ export const translations: Record<string, TranslationKeys> = {
     reset: "Redefinir",
     export: "Exportar",
     
-    numberOfColors: "Número de Cores",
+    numberOfColors: "Número de cores",
     hue: "Matiz",
     saturation: "Saturação",
     brightness: "Brilho",

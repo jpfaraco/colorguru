@@ -164,6 +164,46 @@ export function getCubicBezier(x1: number, y1: number, x2: number, y2: number): 
 }
 
 export function getCurveNames(): string[] {
-  // Include a special Custom option at the end
-  return [...Object.keys(EASING_CURVES), 'Custom'];
+  return Object.keys(EASING_CURVES);
 }
+
+// Preset control points for CSS cubic-bezier equivalent curves
+// Reference: easings.net data
+export interface BezierPreset { x1: number; y1: number; x2: number; y2: number }
+
+export const CURVE_PRESETS: Record<string, BezierPreset> = {
+  // Linear (approximation with symmetric points)
+  'Linear': { x1: 0.25, y1: 0.25, x2: 0.75, y2: 0.75 },
+  // Sine
+  'Sine - EaseIn': { x1: 0.12, y1: 0, x2: 0.39, y2: 0 },
+  'Sine - EaseOut': { x1: 0.61, y1: 1, x2: 0.88, y2: 1 },
+  'Sine - EaseInOut': { x1: 0.37, y1: 0, x2: 0.63, y2: 1 },
+  // Quad
+  'Quad - EaseIn': { x1: 0.11, y1: 0, x2: 0.5, y2: 0 },
+  'Quad - EaseOut': { x1: 0.5, y1: 1, x2: 0.89, y2: 1 },
+  'Quad - EaseInOut': { x1: 0.45, y1: 0, x2: 0.55, y2: 1 },
+  // Cubic
+  'Cubic - EaseIn': { x1: 0.32, y1: 0, x2: 0.67, y2: 0 },
+  'Cubic - EaseOut': { x1: 0.33, y1: 1, x2: 0.68, y2: 1 },
+  'Cubic - EaseInOut': { x1: 0.65, y1: 0, x2: 0.35, y2: 1 },
+  // Quart
+  'Quart - EaseIn': { x1: 0.5, y1: 0, x2: 0.75, y2: 0 },
+  'Quart - EaseOut': { x1: 0.25, y1: 1, x2: 0.5, y2: 1 },
+  'Quart - EaseInOut': { x1: 0.76, y1: 0, x2: 0.24, y2: 1 },
+  // Quint
+  'Quint - EaseIn': { x1: 0.64, y1: 0, x2: 0.78, y2: 0 },
+  'Quint - EaseOut': { x1: 0.22, y1: 1, x2: 0.36, y2: 1 },
+  'Quint - EaseInOut': { x1: 0.83, y1: 0, x2: 0.17, y2: 1 },
+  // Expo
+  'Expo - EaseIn': { x1: 0.7, y1: 0, x2: 0.84, y2: 0 },
+  'Expo - EaseOut': { x1: 0.16, y1: 1, x2: 0.3, y2: 1 },
+  'Expo - EaseInOut': { x1: 0.87, y1: 0, x2: 0.13, y2: 1 },
+  // Circ
+  'Circ - EaseIn': { x1: 0.55, y1: 0, x2: 1, y2: 0.45 },
+  'Circ - EaseOut': { x1: 0, y1: 0.55, x2: 0.45, y2: 1 },
+  'Circ - EaseInOut': { x1: 0.85, y1: 0, x2: 0.15, y2: 1 },
+  // Back (allows y outside [0,1])
+  'Back - EaseIn': { x1: 0.36, y1: 0, x2: 0.66, y2: -0.56 },
+  'Back - EaseOut': { x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 },
+  'Back - EaseInOut': { x1: 0.68, y1: -0.6, x2: 0.32, y2: 1.6 },
+};
