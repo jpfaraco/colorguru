@@ -5,6 +5,7 @@ import { PalettePreview } from "./components/PalettePreview";
 import { ExportModal } from "./components/ExportModal";
 import { generatePalette } from "./utils/paletteGenerator";
 import { getCurveNames } from "./utils/easingCurves";
+import { getTranslation, languageOptions } from "./utils/translations";
 
 // Types
 export interface ColorState {
@@ -53,6 +54,7 @@ function App() {
   const [activeGraph, setActiveGraph] = useState<"hue" | "saturation" | "brightness" | "luminance" | "sat-bri">("hue");
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const [language, setLanguage] = useState("en");
 
   // Generate palette data
   const paletteData = useMemo(() => {
@@ -61,6 +63,9 @@ function App() {
 
   // Get curve names for dropdowns
   const curveNames = getCurveNames();
+
+  // Translation helper
+  const t = (key: keyof import("./utils/translations").TranslationKeys) => getTranslation(language, key);
 
   // Toggle section collapse
   const toggleSection = (sectionId: string) => {
@@ -102,13 +107,22 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Color Guru</h1>
+        <h1>{t("appName")}</h1>
         <div className="header-actions">
+          <div className="language-selector">
+            <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+              {languageOptions.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.flag} {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <button className="reset-btn" onClick={handleReset}>
-            Reset
+            {t("reset")}
           </button>
           <button className="share-btn" onClick={() => setIsExportModalOpen(true)}>
-            Export
+            {t("export")}
           </button>
         </div>
       </header>
@@ -119,13 +133,13 @@ function App() {
           <div className="controls">
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("steps")}>
-                <h3>Major Steps</h3>
+                <h3>{t("numberOfColors")}</h3>
                 <span className={`collapse-icon ${collapsedSections.has("steps") ? "collapsed" : ""}`}>▼</span>
               </div>
               <div className={`section-content ${collapsedSections.has("steps") ? "collapsed" : ""}`}>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>Total</label>
+                    <label>{t("total")}</label>
                     <span className="slider-value">{colorState.steps}</span>
                   </div>
                   <div className="slider-container">
@@ -148,13 +162,13 @@ function App() {
 
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("hue")}>
-                <h3>Hue</h3>
+                <h3>{t("hue")}</h3>
                 <span className={`collapse-icon ${collapsedSections.has("hue") ? "collapsed" : ""}`}>▼</span>
               </div>
               <div className={`section-content ${collapsedSections.has("hue") ? "collapsed" : ""}`}>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>Start</label>
+                    <label>{t("start")}</label>
                     <span className="slider-value">{colorState.hue.start}°</span>
                   </div>
                   <div className="slider-container">
@@ -175,7 +189,7 @@ function App() {
                 </div>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>End</label>
+                    <label>{t("end")}</label>
                     <span className="slider-value">{colorState.hue.end}°</span>
                   </div>
                   <div className="slider-container">
@@ -195,7 +209,7 @@ function App() {
                   </div>
                 </div>
                 <div className="control-group">
-                  <label>Curve</label>
+                  <label>{t("curve")}</label>
                   <select
                     value={colorState.hue.curve}
                     onChange={(e) =>
@@ -225,7 +239,7 @@ function App() {
                           }))
                         }
                       />
-                      Long path interpolation
+                      {t("longPathInterpolation")}
                     </label>
                   </div>
                 </div>
@@ -234,13 +248,13 @@ function App() {
 
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("saturation")}>
-                <h3>Saturation</h3>
+                <h3>{t("saturation")}</h3>
                 <span className={`collapse-icon ${collapsedSections.has("saturation") ? "collapsed" : ""}`}>▼</span>
               </div>
               <div className={`section-content ${collapsedSections.has("saturation") ? "collapsed" : ""}`}>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>Start</label>
+                    <label>{t("start")}</label>
                     <span className="slider-value">{colorState.saturation.start}%</span>
                   </div>
                   <div className="slider-container">
@@ -260,7 +274,7 @@ function App() {
                 </div>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>End</label>
+                    <label>{t("end")}</label>
                     <span className="slider-value">{colorState.saturation.end}%</span>
                   </div>
                   <div className="slider-container">
@@ -280,7 +294,7 @@ function App() {
                 </div>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>Rate</label>
+                    <label>{t("rate")}</label>
                     <span className="slider-value">{colorState.saturation.rate.toFixed(1)}</span>
                   </div>
                   <div className="slider-container">
@@ -300,7 +314,7 @@ function App() {
                   </div>
                 </div>
                 <div className="control-group">
-                  <label>Curve</label>
+                  <label>{t("curve")}</label>
                   <select
                     value={colorState.saturation.curve}
                     onChange={(e) =>
@@ -322,13 +336,13 @@ function App() {
 
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("brightness")}>
-                <h3>Brightness</h3>
+                <h3>{t("brightness")}</h3>
                 <span className={`collapse-icon ${collapsedSections.has("brightness") ? "collapsed" : ""}`}>▼</span>
               </div>
               <div className={`section-content ${collapsedSections.has("brightness") ? "collapsed" : ""}`}>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>Start</label>
+                    <label>{t("start")}</label>
                     <span className="slider-value">{colorState.brightness.start}%</span>
                   </div>
                   <div className="slider-container">
@@ -348,7 +362,7 @@ function App() {
                 </div>
                 <div className="control-group">
                   <div className="label-row">
-                    <label>End</label>
+                    <label>{t("end")}</label>
                     <span className="slider-value">{colorState.brightness.end}%</span>
                   </div>
                   <div className="slider-container">
@@ -367,7 +381,7 @@ function App() {
                   </div>
                 </div>
                 <div className="control-group">
-                  <label>Curve</label>
+                  <label>{t("curve")}</label>
                   <select
                     value={colorState.brightness.curve}
                     onChange={(e) =>
@@ -393,31 +407,31 @@ function App() {
         <div className="middle-panel">
           <div className="graph-controls">
             <button className={activeGraph === "hue" ? "active" : ""} onClick={() => setActiveGraph("hue")}>
-              Hue
+              {t("hue")}
             </button>
             <button className={activeGraph === "saturation" ? "active" : ""} onClick={() => setActiveGraph("saturation")}>
-              Saturation
+              {t("saturation")}
             </button>
             <button className={activeGraph === "brightness" ? "active" : ""} onClick={() => setActiveGraph("brightness")}>
-              Brightness
+              {t("brightness")}
             </button>
             <button className={activeGraph === "luminance" ? "active" : ""} onClick={() => setActiveGraph("luminance")}>
-              Luminance
+              {t("luminance")}
             </button>
             <button className={activeGraph === "sat-bri" ? "active" : ""} onClick={() => setActiveGraph("sat-bri")}>
-              Sat × Bri
+              {t("satBri")}
             </button>
           </div>
-          <Graph paletteData={paletteData} activeGraph={activeGraph} />
+          <Graph paletteData={paletteData} activeGraph={activeGraph} language={language} />
         </div>
 
         {/* Right Panel - Palette */}
         <div className="right-panel">
-          <PalettePreview colors={paletteData.colors} />
+          <PalettePreview colors={paletteData.colors} language={language} />
         </div>
       </div>
 
-      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} paletteData={paletteData} colorState={colorState} />
+      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} paletteData={paletteData} colorState={colorState} language={language} />
     </div>
   );
 }

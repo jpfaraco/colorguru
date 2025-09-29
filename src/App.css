@@ -46,6 +46,31 @@ body {
   font-weight: 600;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.language-selector select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.language-selector select:hover {
+  background: var(--secondary-bg);
+}
+
 .header-actions {
   display: flex;
   gap: 0.5rem;

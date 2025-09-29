@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PaletteData, exportAsCSS, exportAsJSON, exportAsPlainText, copyToClipboard } from '../utils/paletteGenerator';
+import { getTranslation } from '../utils/translations';
 import { ColorState } from '../App';
 import './ExportModal.css';
 
@@ -8,6 +9,7 @@ interface ExportModalProps {
   onClose: () => void;
   paletteData: PaletteData;
   colorState: ColorState;
+  language?: string;
 }
 
 type ExportFormat = 'css' | 'json' | 'text';
@@ -16,10 +18,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   isOpen,
   onClose,
   paletteData,
-  colorState
+  colorState,
+  language = 'en'
 }) => {
   const [activeFormat, setActiveFormat] = useState<ExportFormat>('css');
   const [copied, setCopied] = useState(false);
+
+  const t = (key: keyof import('../utils/translations').TranslationKeys) => getTranslation(language, key);
 
   if (!isOpen) return null;
 
@@ -69,7 +74,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     <div className="export-modal-backdrop" onClick={handleBackdropClick}>
       <div className="export-modal">
         <div className="export-modal-header">
-          <h2>Export Palette</h2>
+          <h2>{t('exportTitle')}</h2>
           <button className="close-button" onClick={onClose}>
             ×
           </button>
@@ -80,19 +85,19 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             className={`format-tab ${activeFormat === 'css' ? 'active' : ''}`}
             onClick={() => setActiveFormat('css')}
           >
-            CSS Variables
+            {t('css')}
           </button>
           <button
             className={`format-tab ${activeFormat === 'json' ? 'active' : ''}`}
             onClick={() => setActiveFormat('json')}
           >
-            JSON
+            {t('json')}
           </button>
           <button
             className={`format-tab ${activeFormat === 'text' ? 'active' : ''}`}
             onClick={() => setActiveFormat('text')}
           >
-            Plain Text
+            {t('plainText')}
           </button>
         </div>
 
@@ -110,7 +115,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             onClick={handleCopy}
             disabled={copied}
           >
-            {copied ? '✓ Copied!' : 'Copy to Clipboard'}
+            {copied ? `✓ ${t('copied')}` : t('copy')}
           </button>
           <button
             className="download-button"
@@ -123,7 +128,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         <div className="palette-summary-export">
           <div className="summary-stats">
             <span className="stat">
-              <strong>{paletteData.colors.length}</strong> colors
+              <strong>{paletteData.colors.length}</strong> {t('totalColors').toLowerCase()}
             </span>
             <span className="stat">
               <strong>{paletteData.colors.filter(c => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 4.5).length}</strong> WCAG AA compliant

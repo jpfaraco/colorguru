@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { ColorStep, copyToClipboard } from '../utils/paletteGenerator';
+import { getTranslation } from '../utils/translations';
 import { Tooltip } from './Tooltip';
 import './PalettePreview.css';
 
 interface PalettePreviewProps {
   colors: ColorStep[];
+  language?: string;
 }
 
-export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
+export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = 'en' }) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const t = (key: keyof import('../utils/translations').TranslationKeys) => getTranslation(language, key);
 
   const handleCopyHex = async (hex: string, index: number) => {
     try {
@@ -40,10 +44,10 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
 
   const getWcagTooltip = (level: string) => {
     switch (level) {
-      case 'AAA': return 'AAA: Enhanced contrast (7:1+ ratio)';
-      case 'AA': return 'AA: Standard contrast (4.5:1+ ratio)';
-      case 'A': return 'A: Minimum contrast (3:1+ ratio)';
-      case 'Fail': return 'Fail: Below minimum contrast (<3:1)';
+      case 'AAA': return t('wcagAAA');
+      case 'AA': return t('wcagAA');
+      case 'A': return t('wcagA');
+      case 'Fail': return t('wcagFail');
       default: return `WCAG ${level} compliance level`;
     }
   };
@@ -52,7 +56,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
     return (
       <div className="palette-preview">
         <div className="palette-placeholder">
-          No colors generated yet
+          {t('totalColors')}: 0
         </div>
       </div>
     );
@@ -82,7 +86,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
                 <div className="color-info">
                   <div className="color-details">
                     <span className="lightness-value">{color.hsl.l.toFixed(0)}b</span>
-                    <Tooltip content={`Contrast ratio: ${accessibilityInfo.ratio.toFixed(1)}:1 with best background`}>
+                    <Tooltip content={`${t('contrastRatio')}: ${accessibilityInfo.ratio.toFixed(1)}:1 with best background`}>
                       <span className="contrast-value">{accessibilityInfo.ratio.toFixed(1)}w</span>
                     </Tooltip>
                     <Tooltip content={getWcagTooltip(accessibilityInfo.level)}>
@@ -97,7 +101,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
                       {color.hex}
                       {copiedIndex === index && (
                         <span className="copy-feedback show">
-                          Copied!
+                          {t('copied')}
                         </span>
                       )}
                     </span>
@@ -111,7 +115,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors }) => {
       
       <div className="palette-summary">
         <div className="summary-item">
-          <span className="summary-label">Total Colors:</span>
+          <span className="summary-label">{t('totalColors')}:</span>
           <span className="summary-value">{colors.length}</span>
         </div>
         <div className="summary-item">
