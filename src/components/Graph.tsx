@@ -101,71 +101,7 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
     });
   }, [activeGraph, graphData, chartWidth, chartHeight, padding]);
 
-  // Create smooth curve path
-  const curvePath = useMemo(() => {
-    if (points.length < 2) return "";
-
-    let path = `M ${points[0].x} ${points[0].y}`;
-
-    for (let i = 1; i < points.length; i++) {
-      const prev = points[i - 1];
-      const curr = points[i];
-
-      if (i === 1) {
-        // First curve segment
-        const cp1x = prev.x + (curr.x - prev.x) * 0.3;
-        const cp1y = prev.y;
-        const cp2x = curr.x - (curr.x - prev.x) * 0.3;
-        const cp2y = curr.y;
-        path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
-      } else {
-        // Subsequent curve segments
-        const prevPrev = points[i - 2];
-        const next = i < points.length - 1 ? points[i + 1] : curr;
-
-        const cp1x = prev.x + (curr.x - prevPrev.x) * 0.15;
-        const cp1y = prev.y + (curr.y - prevPrev.y) * 0.15;
-        const cp2x = curr.x - (next.x - prev.x) * 0.15;
-        const cp2y = curr.y - (next.y - prev.y) * 0.15;
-
-        path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
-      }
-    }
-
-    return path;
-  }, [points]);
-
-  // Generate y-axis ticks
-  const yTicks = useMemo(() => {
-    const tickCount = 6;
-    const ticks = [];
-    for (let i = 0; i <= tickCount; i++) {
-      const value = graphData.minValue + (graphData.maxValue - graphData.minValue) * (i / tickCount);
-      const y = padding.top + chartHeight - (i / tickCount) * chartHeight;
-      ticks.push({ value: Math.round(value), y });
-    }
-    return ticks;
-  }, [graphData, chartHeight, padding]);
-
-  // Generate x-axis ticks
-  const xTicks = useMemo(() => {
-    const ticks = [];
-    const tickCount = Math.min(points.length, 11); // Limit to prevent overcrowding
-    const interval = Math.max(1, Math.floor(points.length / tickCount));
-
-    for (let i = 0; i < points.length; i += interval) {
-      const point = points[i];
-      ticks.push({ value: i + 1, x: point.x });
-    }
-
-    // Always include the last point
-    if (points.length > 1 && ticks[ticks.length - 1].value !== points.length) {
-      const lastPoint = points[points.length - 1];
-      ticks.push({ value: points.length, x: lastPoint.x });
-    }
-
-    return ticks;
-  }, [points]);
+  // (Removed unused curve path and tick builders to satisfy strict TypeScript build)
 
   if (!colors.length) {
     return (

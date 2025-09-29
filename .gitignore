@@ -60,3 +60,4 @@ pnpm-lock.yaml
 
 # Temporary development files
 prompt.md
+.vercel
