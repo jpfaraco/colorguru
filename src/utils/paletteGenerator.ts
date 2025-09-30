@@ -166,7 +166,6 @@ export function copyToClipboard(text: string): Promise<void> {
 export function exportAsSVG(palette: PaletteData): string {
   const swatchSize = 40;
   const gap = 8;
-  const rx = 8;
   const count = palette.colors.length;
   const width = count > 0 ? count * swatchSize + (count - 1) * gap : swatchSize;
   const height = swatchSize;
@@ -179,7 +178,7 @@ export function exportAsSVG(palette: PaletteData): string {
   const rects = palette.colors.map((c, i) => {
     const x = i * (swatchSize + gap);
     const hex = c.hex.replace('#', '').toUpperCase();
-    return `<rect x="${x}" width="${swatchSize}" height="${swatchSize}" rx="${rx}" fill="#${hex}" id="${hex}"/>`;
+    return `<rect x="${x}" width="${swatchSize}" height="${swatchSize}" fill="#${hex}" id="${hex}"/>`;
   }).join('\n');
 
   return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg" id="${id}">

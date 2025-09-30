@@ -28,18 +28,6 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
     return color.contrastRatioWhite > color.contrastRatioBlack ? "white" : "black";
   };
 
-  const getAccessibilityBadge = (color: ColorStep) => {
-    const whiteLevel = color.wcagWhite;
-    const blackLevel = color.wcagBlack;
-    const bestLevel = color.contrastRatioWhite > color.contrastRatioBlack ? whiteLevel : blackLevel;
-
-    return {
-      level: bestLevel,
-      ratio: color.contrastRatioWhite > color.contrastRatioBlack ? color.contrastRatioWhite : color.contrastRatioBlack,
-      background: getBestContrastColor(color),
-    };
-  };
-
   const getWcagTooltip = (level: string) => {
     switch (level) {
       case "AAA":
@@ -55,6 +43,21 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
     }
   };
 
+  const getWcagBadgeColor = (level: string) => {
+    switch (level) {
+      case "AAA":
+        return "#428d1c";
+      case "AA":
+        return "#e0b700";
+      case "A":
+        return "#e0b700";
+      case "Fail":
+        return "#bf321f";
+      default:
+        return "#428d1c";
+    }
+  };
+
   if (!colors.length) {
     return (
       <div className="palette-preview">
@@ -67,7 +70,6 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
     <div className="palette-preview">
       <div className="palette-colors">
         {colors.map((color, index) => {
-          const accessibilityInfo = getAccessibilityBadge(color);
           const textColor = getBestContrastColor(color);
 
           return (
@@ -75,21 +77,30 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
               <div className="color-content" style={{ color: textColor === "white" ? "#ffffff" : "#000000" }}>
                 <div className="color-index">{index * 10}</div>
 
-                <div className="color-info">
-                  <div className="color-details">
-                    <span className="lightness-value">{color.hsl.l.toFixed(0)}b</span>
-                    <Tooltip content={`${t("contrastRatio")}: ${accessibilityInfo.ratio.toFixed(1)}:1 ${t("withBestBackground")}`}>
-                      <span className="contrast-value">{accessibilityInfo.ratio.toFixed(1)}w</span>
+                <div className="contrast-scores">
+                  <div className="contrast-score">
+                    <span className="contrast-value contrast-value-white">{color.contrastRatioWhite.toFixed(2)}</span>
+                    <Tooltip content={getWcagTooltip(color.wcagWhite)}>
+                      <div className="wcag-badge" style={{ backgroundColor: getWcagBadgeColor(color.wcagWhite) }}>
+                        <span>{color.wcagWhite}</span>
+                      </div>
                     </Tooltip>
-                    <Tooltip content={getWcagTooltip(accessibilityInfo.level)}>
-                      <span className={`wcag-rating wcag-${accessibilityInfo.level.toLowerCase()}`}>{accessibilityInfo.level}</span>
+                  </div>
+
+                  <div className="contrast-score">
+                    <span className="contrast-value contrast-value-black">{color.contrastRatioBlack.toFixed(2)}</span>
+                    <Tooltip content={getWcagTooltip(color.wcagBlack)}>
+                      <div className="wcag-badge" style={{ backgroundColor: getWcagBadgeColor(color.wcagBlack) }}>
+                        <span>{color.wcagBlack}</span>
+                      </div>
                     </Tooltip>
-                    <span className={`color-hex ${copiedIndex === index ? "copied" : ""}`} onClick={() => handleCopyHex(color.hex, index)}>
-                      {color.hex}
-                      {copiedIndex === index && <span className="copy-feedback show">{t("copied")}</span>}
-                    </span>
                   </div>
                 </div>
+
+                <span className={`color-hex ${copiedIndex === index ? "copied" : ""}`} onClick={() => handleCopyHex(color.hex, index)}>
+                  {color.hex.toUpperCase()}
+                  {copiedIndex === index && <span className="copy-feedback show">{t("copied")}</span>}
+                </span>
               </div>
             </div>
           );

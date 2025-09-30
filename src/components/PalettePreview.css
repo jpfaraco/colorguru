@@ -8,6 +8,7 @@
 .palette-colors {
   flex: 1;
   overflow-y: auto;
+  border-radius: 0.5rem;
 }
 
 .palette-placeholder {
@@ -25,12 +26,9 @@
   transition: all 0.2s ease;
 }
 
-.color-swatch:first-child {
-  border-radius: 0.5rem 0.5rem 0 0;
-}
-
 .color-swatch:last-child {
-  border-radius: 0 0 0.5rem 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .color-content {
@@ -39,43 +37,76 @@
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.5rem;
+  gap: 16px;
+  padding: 16px;
 }
 
 .color-index {
-  font-size: 1rem;
-  font-weight: 600;
-  opacity: 0.9;
+  flex: 1 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 0;
+  min-height: 1px;
 }
 
-.color-info {
+.contrast-scores {
+  display: flex;
+  gap: 16px;
+}
+
+.contrast-score {
+  width: 80px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
-.color-details {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.lightness-value,
 .contrast-value {
-  min-width: 2.5rem;
-  text-align: right;
-  opacity: 0.8;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.contrast-value-white {
+  color: #ffffff;
+}
+
+.contrast-value-black {
+  color: #000000;
+}
+
+.wcag-badge {
+  height: 20px;
+  width: 32px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+}
+
+.wcag-badge span {
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+.wcag-badge[style*="rgb(224, 183, 0)"] span {
+  color: #1a1600;
 }
 
 .color-hex {
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: "JetBrains Mono", "Monaco", "Consolas", "Courier New", monospace;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  white-space: nowrap;
+  text-align: right;
+  min-width: 70px;
 }
 
 .color-hex:hover {
@@ -100,6 +131,25 @@
     transform: scale(1.1);
     opacity: 1;
   }
+}
+
+.copy-feedback {
+  position: absolute;
+  right: 0;
+  top: -20px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.copy-feedback.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .copy-feedback {
@@ -156,7 +206,7 @@
 .color-hsl {
   font-size: 0.75rem;
   opacity: 0.9;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  font-family: "JetBrains Mono", "Monaco", "Consolas", "Courier New", monospace;
   margin-bottom: 0.5rem;
 }
 
