@@ -95,21 +95,6 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
           );
         })}
       </div>
-
-      <div className="palette-summary">
-        <div className="summary-item">
-          <span className="summary-label">{t("totalColors")}:</span>
-          <span className="summary-value">{colors.length}</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">WCAG AAA:</span>
-          <span className="summary-value">{colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 7).length}</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">WCAG AA:</span>
-          <span className="summary-value">{colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 4.5).length}</span>
-        </div>
-      </div>
     </div>
   );
 };

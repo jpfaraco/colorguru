@@ -132,20 +132,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, palet
             </button>
           </div>
         </div>
-
-        <div className="palette-summary-export">
-          <div className="summary-stats">
-            <span className="stat">
-              <strong>{paletteData.colors.length}</strong> {t("totalColors").toLowerCase()}
-            </span>
-            <span className="stat">
-              <strong>{paletteData.colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 4.5).length}</strong> WCAG AA compliant
-            </span>
-            <span className="stat">
-              <strong>{paletteData.colors.filter((c) => Math.max(c.contrastRatioWhite, c.contrastRatioBlack) >= 7).length}</strong> WCAG AAA compliant
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );
