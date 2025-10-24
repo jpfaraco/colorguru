@@ -91,15 +91,19 @@ Managed in `src/utils/translations.ts`:
 - Y values in bezier curves can exceed [0,1] for overshoot effects (Back easing)
 
 ### Pinned Colors
-- Users can pin a color by clicking on it in the palette or graph view
-- Clicking a pinned color unpins it, revealing the "ghost" generated color underneath
-- When a user clicks a color, it is pinned at that exact index position (not repositioned)
+- Users can pin colors in two ways:
+  1. **Click in graph/palette**: Pins the clicked color using similarity-based positioning
+  2. **Type hex in sidebar input**: Pins using similarity-based positioning
+- Unpinning:
+  - Click the pinned color in graph/palette to unpin it
+  - Clear the hex input field to unpin
+- Positioning uses multi-dimensional similarity in HSL space to find optimal position using Euclidean distance: `sqrt((ΔH/180)² + (ΔS/100)² + (ΔL/100)²)`
+- Pinned color **repositions automatically** when HSB parameters or curves change (not fixed to index)
 - Pinned color **replaces** (not inserts) the generated color at that position—maintains natural interpolation spacing
 - The replaced color is conceptually a "ghost" that preserves curve continuity
 - Total step count remains constant whether or not a color is pinned
 - Pinned colors are visually indicated with a 2px white border in the palette and a white ring in the graph
 - User must manually adjust curves/parameters to make smooth transitions through pinned color
-- Legacy behavior: If pinnedIndex is not provided, system uses multi-dimensional similarity in HSL space to find optimal position using Euclidean distance
 
 ### Accessibility Calculations
 - Contrast ratios use WCAG 2.0 relative luminance formula

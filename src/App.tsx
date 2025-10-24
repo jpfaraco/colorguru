@@ -111,18 +111,18 @@ function App() {
   };
 
   // Toggle pin/unpin for a color
-  const handleTogglePin = (hexColor: string, index: number) => {
+  const handleTogglePin = (hexColor: string) => {
     setColorState((prev) => {
       // Normalize hex colors for comparison (case-insensitive)
       const normalizedHex = hexColor.toLowerCase();
       const normalizedPinnedColor = prev.pinnedColor?.toLowerCase();
 
-      // If clicking the already pinned color at the same index, unpin it
-      if (normalizedPinnedColor === normalizedHex && prev.pinnedIndex === index) {
+      // If clicking the already pinned color, unpin it
+      if (normalizedPinnedColor === normalizedHex) {
         return { ...prev, pinnedColor: undefined, pinnedIndex: undefined };
       }
-      // Otherwise, pin this color at this specific index
-      return { ...prev, pinnedColor: normalizedHex, pinnedIndex: index };
+      // Otherwise, pin this color (without storing index - let similarity algorithm position it)
+      return { ...prev, pinnedColor: normalizedHex, pinnedIndex: undefined };
     });
   };
 
@@ -189,46 +189,29 @@ function App() {
               </div>
               <div className={`section-content ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>
                 <div className="control-group">
-                  <div className="checkbox-container">
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={!!colorState.pinnedColor}
-                        onChange={(e) =>
-                          setColorState((prev) => ({
-                            ...prev,
-                            pinnedColor: e.target.checked ? "#72B3D9" : undefined,
-                          }))
-                        }
-                      />
-                      {t("enablePinnedColor")}
-                    </label>
-                  </div>
+                  <label>{t("hexValue")}</label>
+                  <input
+                    type="text"
+                    value={colorState.pinnedColor || ""}
+                    onChange={(e) => {
+                      const value = e.target.value.trim();
+                      setColorState((prev) => ({
+                        ...prev,
+                        pinnedColor: value || undefined,
+                        pinnedIndex: undefined, // Clear index when manually typing
+                      }));
+                    }}
+                    placeholder="#72B3D9"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      fontFamily: "monospace",
+                      fontSize: "14px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                    }}
+                  />
                 </div>
-                {colorState.pinnedColor && (
-                  <div className="control-group">
-                    <label>{t("hexValue")}</label>
-                    <input
-                      type="text"
-                      value={colorState.pinnedColor}
-                      onChange={(e) =>
-                        setColorState((prev) => ({
-                          ...prev,
-                          pinnedColor: e.target.value,
-                        }))
-                      }
-                      placeholder="#72B3D9"
-                      style={{
-                        width: "100%",
-                        padding: "8px",
-                        fontFamily: "monospace",
-                        fontSize: "14px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                      }}
-                    />
-                  </div>
-                )}
               </div>
             </div>
 

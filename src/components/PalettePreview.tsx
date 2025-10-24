@@ -7,7 +7,7 @@ import "./PalettePreview.css";
 interface PalettePreviewProps {
   colors: ColorStep[];
   language?: string;
-  onTogglePin?: (hexColor: string, index: number) => void;
+  onTogglePin?: (hexColor: string) => void;
 }
 
 export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = "en", onTogglePin }) => {
@@ -82,7 +82,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
                 ...(color.isPinned && { border: '2px solid white' }),
                 cursor: onTogglePin ? 'pointer' : 'default'
               }}
-              onClick={() => onTogglePin?.(color.hex, index)}
+              onClick={() => onTogglePin?.(color.hex)}
             >
               <div className="color-content" style={{ color: textColor === "white" ? "#ffffff" : "#000000" }}>
                 <div className="color-index">
