@@ -92,12 +92,15 @@ Managed in `src/utils/translations.ts`:
 
 ### Pinned Colors
 - Users can pin colors in two ways:
-  1. **Click in graph/palette**: Pins the clicked color using similarity-based positioning
-  2. **Type hex in sidebar input**: Pins using similarity-based positioning
+  1. **Click in graph/palette**: Pins the clicked color using luminance-based positioning
+  2. **Type hex in sidebar input**: Pins using luminance-based positioning
 - Unpinning:
   - Click the pinned color in graph/palette to unpin it
   - Clear the hex input field to unpin
-- Positioning uses multi-dimensional similarity in HSL space to find optimal position using Euclidean distance: `sqrt((ΔH/180)² + (ΔS/100)² + (ΔL/100)²)`
+- Positioning uses WCAG luminance to find optimal position in the palette
+  - Calculates luminance using: `0.2126×R + 0.7152×G + 0.0722×B` (with gamma correction)
+  - Inserts pinned color at the position where its luminance fits in the descending sequence
+  - This ensures the pinned color appears in the visually correct position based on perceived brightness
 - Pinned color **repositions automatically** when HSB parameters or curves change (not fixed to index)
 - Pinned color **replaces** (not inserts) the generated color at that position—maintains natural interpolation spacing
 - The replaced color is conceptually a "ghost" that preserves curve continuity

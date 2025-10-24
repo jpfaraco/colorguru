@@ -36,55 +36,26 @@ function rgbToLuminance(r: number, g: number, b: number): number {
   return rs * 0.2126 + gs * 0.7152 + bs * 0.0722;
 }
 
-// Calculate multi-dimensional color similarity (Euclidean distance in HSL space)
-function colorSimilarity(color1: HSL, color2: HSL): number {
-  // Circular hue distance (0-180 max)
-  const hueDiff = Math.abs(color1.h - color2.h);
-  const hueDist = Math.min(hueDiff, 360 - hueDiff);
-
-  const satDist = Math.abs(color1.s - color2.s);
-  const lightDist = Math.abs(color1.l - color2.l);
-
-  // Normalize to comparable scales and compute Euclidean distance
-  return Math.sqrt(
-    Math.pow(hueDist / 180, 2) +
-    Math.pow(satDist / 100, 2) +
-    Math.pow(lightDist / 100, 2)
-  );
-}
-
-// Find the best position to insert a pinned color based on similarity
+// Find the best position to insert a pinned color based on luminance
 function findInsertPosition(pinnedHSL: HSL, colors: ColorStep[]): number {
   if (colors.length === 0) return 0;
-  if (colors.length === 1) {
-    // If only one color, decide if pinned should go before or after
-    const distToFirst = colorSimilarity(pinnedHSL, colors[0].hsl);
-    return distToFirst < 0.5 ? 0 : 1;
-  }
 
-  let minScore = Infinity;
-  let insertPos = colors.length; // Default: append at end
+  // Calculate luminance of the pinned color
+  const pinnedRGB = hslToRgb(pinnedHSL);
+  const pinnedLuminance = rgbToLuminance(pinnedRGB.r, pinnedRGB.g, pinnedRGB.b);
 
-  // Check each adjacent pair
-  for (let i = 0; i < colors.length - 1; i++) {
-    const score =
-      colorSimilarity(pinnedHSL, colors[i].hsl) +
-      colorSimilarity(pinnedHSL, colors[i + 1].hsl);
+  // Find the position where the pinned luminance fits in the sequence
+  for (let i = 0; i < colors.length; i++) {
+    const colorLuminance = rgbToLuminance(colors[i].rgb.r, colors[i].rgb.g, colors[i].rgb.b);
 
-    if (score < minScore) {
-      minScore = score;
-      insertPos = i + 1; // Insert between i and i+1
+    // If pinned luminance is greater than or equal to current color, insert here
+    if (pinnedLuminance >= colorLuminance) {
+      return i;
     }
   }
 
-  // Also check if it should go at very start or end
-  const startScore = colorSimilarity(pinnedHSL, colors[0].hsl) * 2;
-  const endScore = colorSimilarity(pinnedHSL, colors[colors.length - 1].hsl) * 2;
-
-  if (startScore < minScore) insertPos = 0;
-  if (endScore < minScore) insertPos = colors.length;
-
-  return insertPos;
+  // If we get here, pinned color is darker than all colors, append at end
+  return colors.length - 1;
 }
 
 export function generatePalette(colorState: ColorState): PaletteData {
