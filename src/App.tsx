@@ -31,6 +31,8 @@ export interface ColorState {
     curve: string;
     custom?: { x1: number; y1: number; x2: number; y2: number };
   };
+  pinnedColor?: string;
+  pinnedIndex?: number;
 }
 
 function App() {
@@ -57,7 +59,7 @@ function App() {
 
   const [activeGraph, setActiveGraph] = useState<"hue" | "saturation" | "brightness" | "luminance" | "sat-bri">("hue");
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set(["steps", "pinned", "hue", "saturation", "brightness"]));
   const [language, setLanguage] = useState("en");
 
   // Generate palette data
@@ -105,6 +107,22 @@ function App() {
         end: 20,
         curve: "Quad - EaseIn",
       },
+    });
+  };
+
+  // Toggle pin/unpin for a color
+  const handleTogglePin = (hexColor: string, index: number) => {
+    setColorState((prev) => {
+      // Normalize hex colors for comparison (case-insensitive)
+      const normalizedHex = hexColor.toLowerCase();
+      const normalizedPinnedColor = prev.pinnedColor?.toLowerCase();
+
+      // If clicking the already pinned color at the same index, unpin it
+      if (normalizedPinnedColor === normalizedHex && prev.pinnedIndex === index) {
+        return { ...prev, pinnedColor: undefined, pinnedIndex: undefined };
+      }
+      // Otherwise, pin this color at this specific index
+      return { ...prev, pinnedColor: normalizedHex, pinnedIndex: index };
     });
   };
 
@@ -161,6 +179,56 @@ function App() {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="control-section">
+              <div className="section-header-collapsible" onClick={() => toggleSection("pinned")}>
+                <h3>{t("pinnedColor")}</h3>
+                <span className={`collapse-icon ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>▼</span>
+              </div>
+              <div className={`section-content ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>
+                <div className="control-group">
+                  <div className="checkbox-container">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={!!colorState.pinnedColor}
+                        onChange={(e) =>
+                          setColorState((prev) => ({
+                            ...prev,
+                            pinnedColor: e.target.checked ? "#72B3D9" : undefined,
+                          }))
+                        }
+                      />
+                      {t("enablePinnedColor")}
+                    </label>
+                  </div>
+                </div>
+                {colorState.pinnedColor && (
+                  <div className="control-group">
+                    <label>{t("hexValue")}</label>
+                    <input
+                      type="text"
+                      value={colorState.pinnedColor}
+                      onChange={(e) =>
+                        setColorState((prev) => ({
+                          ...prev,
+                          pinnedColor: e.target.value,
+                        }))
+                      }
+                      placeholder="#72B3D9"
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        fontFamily: "monospace",
+                        fontSize: "14px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -441,12 +509,12 @@ function App() {
               {t("satBri")}
             </button>
           </div>
-          <Graph paletteData={paletteData} activeGraph={activeGraph} language={language} />
+          <Graph paletteData={paletteData} activeGraph={activeGraph} language={language} onTogglePin={handleTogglePin} />
         </div>
 
         {/* Right Panel - Palette */}
         <div className="right-panel">
-          <PalettePreview colors={paletteData.colors} language={language} />
+          <PalettePreview colors={paletteData.colors} language={language} onTogglePin={handleTogglePin} />
         </div>
       </div>
 

@@ -7,9 +7,10 @@ import "./PalettePreview.css";
 interface PalettePreviewProps {
   colors: ColorStep[];
   language?: string;
+  onTogglePin?: (hexColor: string, index: number) => void;
 }
 
-export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = "en" }) => {
+export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = "en", onTogglePin }) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
@@ -73,9 +74,20 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
           const textColor = getBestContrastColor(color);
 
           return (
-            <div key={`color-${index}`} className="color-swatch" style={{ backgroundColor: color.hex }}>
+            <div
+              key={`color-${index}`}
+              className="color-swatch"
+              style={{
+                backgroundColor: color.hex,
+                ...(color.isPinned && { border: '2px solid white' }),
+                cursor: onTogglePin ? 'pointer' : 'default'
+              }}
+              onClick={() => onTogglePin?.(color.hex, index)}
+            >
               <div className="color-content" style={{ color: textColor === "white" ? "#ffffff" : "#000000" }}>
-                <div className="color-index">{index * 10}</div>
+                <div className="color-index">
+                  {index * 10}
+                </div>
 
                 <div className="contrast-scores">
                   <div className="contrast-score">
@@ -97,7 +109,13 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
                   </div>
                 </div>
 
-                <span className={`color-hex ${copiedIndex === index ? "copied" : ""}`} onClick={() => handleCopyHex(color.hex, index)}>
+                <span
+                  className={`color-hex ${copiedIndex === index ? "copied" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopyHex(color.hex, index);
+                  }}
+                >
                   {color.hex.toUpperCase()}
                   {copiedIndex === index && <span className="copy-feedback show">{t("copied")}</span>}
                 </span>

@@ -9,9 +9,10 @@ interface GraphProps {
   width?: number;
   height?: number;
   language?: string;
+  onTogglePin?: (hexColor: string, index: number) => void;
 }
 
-export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 600, height = 400, language = "en" }) => {
+export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 600, height = 400, language = "en", onTogglePin }) => {
   const { colors, hueValues, saturationValues, brightnessValues, luminanceValues } = paletteData;
 
   const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
@@ -287,7 +288,10 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
                 left: `${leftPercent}%`,
                 bottom: `${bottomPercent}%`,
                 backgroundColor: colors[i]?.hex || "#8b5cf6",
+                ...(colors[i]?.isPinned && { boxShadow: '0 0 0 2px #ffffff, 0 0 0 4px rgba(0, 0, 0, 0.3)' }),
+                cursor: onTogglePin ? 'pointer' : 'default'
               }}
+              onClick={() => onTogglePin?.(colors[i]?.hex, i)}
             >
               <div className="dot-value" style={{ color: textColor }}>
                 {activeGraph === "sat-bri" ? `${Math.round(point.value)}, ${Math.round((point as any).yValue || 0)}` : Math.round(point.value)}

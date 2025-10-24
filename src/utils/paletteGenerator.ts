@@ -1,5 +1,5 @@
 import { ColorState } from '../App';
-import { HSL, RGB, hslToHex, hslToRgb, interpolateHue, interpolateLinear, getContrastRatio, getWCAGLevel } from './colorMath';
+import { HSL, RGB, hslToHex, hslToRgb, interpolateHue, interpolateLinear, getContrastRatio, getWCAGLevel, hexToHSL } from './colorMath';
 import { getCubicBezier, getEasingFunction } from './easingCurves';
 
 export interface ColorStep {
@@ -11,6 +11,7 @@ export interface ColorStep {
   contrastRatioBlack: number;
   wcagWhite: 'AAA' | 'AA' | 'A' | 'Fail';
   wcagBlack: 'AAA' | 'AA' | 'A' | 'Fail';
+  isPinned?: boolean;
 }
 
 export interface PaletteData {
@@ -35,8 +36,59 @@ function rgbToLuminance(r: number, g: number, b: number): number {
   return rs * 0.2126 + gs * 0.7152 + bs * 0.0722;
 }
 
+// Calculate multi-dimensional color similarity (Euclidean distance in HSL space)
+function colorSimilarity(color1: HSL, color2: HSL): number {
+  // Circular hue distance (0-180 max)
+  const hueDiff = Math.abs(color1.h - color2.h);
+  const hueDist = Math.min(hueDiff, 360 - hueDiff);
+
+  const satDist = Math.abs(color1.s - color2.s);
+  const lightDist = Math.abs(color1.l - color2.l);
+
+  // Normalize to comparable scales and compute Euclidean distance
+  return Math.sqrt(
+    Math.pow(hueDist / 180, 2) +
+    Math.pow(satDist / 100, 2) +
+    Math.pow(lightDist / 100, 2)
+  );
+}
+
+// Find the best position to insert a pinned color based on similarity
+function findInsertPosition(pinnedHSL: HSL, colors: ColorStep[]): number {
+  if (colors.length === 0) return 0;
+  if (colors.length === 1) {
+    // If only one color, decide if pinned should go before or after
+    const distToFirst = colorSimilarity(pinnedHSL, colors[0].hsl);
+    return distToFirst < 0.5 ? 0 : 1;
+  }
+
+  let minScore = Infinity;
+  let insertPos = colors.length; // Default: append at end
+
+  // Check each adjacent pair
+  for (let i = 0; i < colors.length - 1; i++) {
+    const score =
+      colorSimilarity(pinnedHSL, colors[i].hsl) +
+      colorSimilarity(pinnedHSL, colors[i + 1].hsl);
+
+    if (score < minScore) {
+      minScore = score;
+      insertPos = i + 1; // Insert between i and i+1
+    }
+  }
+
+  // Also check if it should go at very start or end
+  const startScore = colorSimilarity(pinnedHSL, colors[0].hsl) * 2;
+  const endScore = colorSimilarity(pinnedHSL, colors[colors.length - 1].hsl) * 2;
+
+  if (startScore < minScore) insertPos = 0;
+  if (endScore < minScore) insertPos = colors.length;
+
+  return insertPos;
+}
+
 export function generatePalette(colorState: ColorState): PaletteData {
-  const { steps, hue, saturation, brightness } = colorState;
+  const { steps, hue, saturation, brightness, pinnedColor, pinnedIndex } = colorState;
   const colors: ColorStep[] = [];
   const hueValues: number[] = [];
   const saturationValues: number[] = [];
@@ -56,6 +108,7 @@ export function generatePalette(colorState: ColorState): PaletteData {
     ? getCubicBezier((brightness as any).custom.x1, (brightness as any).custom.y1, (brightness as any).custom.x2, (brightness as any).custom.y2)
     : getEasingFunction(brightness.curve);
 
+  // Always generate full number of steps to maintain natural interpolation
   for (let i = 0; i < steps; i++) {
     // Calculate progress (0 to 1)
     const progress = steps === 1 ? 0 : i / (steps - 1);
@@ -103,6 +156,41 @@ export function generatePalette(colorState: ColorState): PaletteData {
     saturationValues.push(clampedS);
     brightnessValues.push(clampedL);
     luminanceValues.push(luminance * 100); // Convert to percentage for easier display
+  }
+
+  // Handle pinned color replacement (not insertion)
+  // This maintains natural interpolation by replacing a generated color instead of squeezing in
+  if (pinnedColor) {
+    const pinnedHSL = hexToHSL(pinnedColor);
+    if (pinnedHSL) {
+      const pinnedRGB = hslToRgb(pinnedHSL);
+      const pinnedLuminance = rgbToLuminance(pinnedRGB.r, pinnedRGB.g, pinnedRGB.b);
+
+      // Use provided index if available, otherwise find best position to replace
+      const replacePos = pinnedIndex !== undefined
+        ? Math.max(0, Math.min(pinnedIndex, colors.length - 1))
+        : findInsertPosition(pinnedHSL, colors);
+
+      // Create pinned color step
+      const pinnedStep: ColorStep = {
+        index: replacePos,
+        hsl: pinnedHSL,
+        rgb: pinnedRGB,
+        hex: pinnedColor.toLowerCase(),
+        contrastRatioWhite: getContrastRatio(pinnedRGB, WHITE_RGB),
+        contrastRatioBlack: getContrastRatio(pinnedRGB, BLACK_RGB),
+        wcagWhite: getWCAGLevel(getContrastRatio(pinnedRGB, WHITE_RGB)),
+        wcagBlack: getWCAGLevel(getContrastRatio(pinnedRGB, BLACK_RGB)),
+        isPinned: true,
+      };
+
+      // Replace the color at that position (the "ghost" color is what was there)
+      colors[replacePos] = pinnedStep;
+      hueValues[replacePos] = pinnedHSL.h;
+      saturationValues[replacePos] = pinnedHSL.s;
+      brightnessValues[replacePos] = pinnedHSL.l;
+      luminanceValues[replacePos] = pinnedLuminance * 100;
+    }
   }
 
   return {

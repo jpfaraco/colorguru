@@ -54,6 +54,69 @@ export function hslToHex(hsl: HSL): string {
   return rgbToHex(hslToRgb(hsl));
 }
 
+export function hexToRgb(hex: string): RGB | null {
+  // Remove # if present
+  const cleanHex = hex.replace(/^#/, '');
+
+  // Validate hex format (3 or 6 characters)
+  if (!/^[0-9A-Fa-f]{3}$|^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
+    return null;
+  }
+
+  // Expand shorthand notation (e.g., "03F" -> "0033FF")
+  const fullHex = cleanHex.length === 3
+    ? cleanHex.split('').map(char => char + char).join('')
+    : cleanHex;
+
+  const r = parseInt(fullHex.substring(0, 2), 16);
+  const g = parseInt(fullHex.substring(2, 4), 16);
+  const b = parseInt(fullHex.substring(4, 6), 16);
+
+  return { r, g, b };
+}
+
+export function rgbToHsl(rgb: RGB): HSL {
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (delta !== 0) {
+    s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+
+    switch (max) {
+      case r:
+        h = ((g - b) / delta + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / delta + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / delta + 4) / 6;
+        break;
+    }
+  }
+
+  return {
+    h: h * 360,
+    s: s * 100,
+    l: l * 100
+  };
+}
+
+export function hexToHSL(hex: string): HSL | null {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return null;
+  return rgbToHsl(rgb);
+}
+
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }

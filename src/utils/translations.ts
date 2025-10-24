@@ -9,7 +9,8 @@ export interface TranslationKeys {
   hue: string;
   saturation: string;
   brightness: string;
-  
+  pinnedColor: string;
+
   // Control Labels
   total: string;
   start: string;
@@ -17,6 +18,8 @@ export interface TranslationKeys {
   rate: string;
   curve: string;
   longPathInterpolation: string;
+  enablePinnedColor: string;
+  hexValue: string;
   
   // Graph Tabs
   luminance: string;
@@ -61,18 +64,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Color Guru",
     reset: "Reset",
     export: "Export",
-    
+
     numberOfColors: "Number of colors",
     hue: "Hue",
     saturation: "Saturation",
     brightness: "Brightness",
-    
+    pinnedColor: "Pinned color",
+
     total: "Total",
     start: "Start",
     end: "End",
     rate: "Rate",
     curve: "Curve",
     longPathInterpolation: "Long path interpolation",
+    enablePinnedColor: "Pin a specific color",
+    hexValue: "Hex value",
     
     luminance: "Luminance",
     satBri: "Sat × Bri",
@@ -109,18 +115,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Color Guru",
     reset: "Restablecer",
     export: "Exportar",
-    
+
     numberOfColors: "Número de colores",
     hue: "Matiz",
     saturation: "Saturación",
     brightness: "Brillo",
-    
+    pinnedColor: "Color fijado",
+
     total: "Total",
     start: "Inicio",
     end: "Fin",
     rate: "Tasa",
     curve: "Curva",
     longPathInterpolation: "Interpolación de ruta larga",
+    enablePinnedColor: "Fijar un color específico",
+    hexValue: "Valor hexadecimal",
     
     luminance: "Luminancia",
     satBri: "Sat × Bri",
@@ -157,18 +166,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Color Guru",
     reset: "Réinitialiser",
     export: "Exporter",
-    
+
     numberOfColors: "Nombre de couleurs",
     hue: "Teinte",
     saturation: "Saturation",
     brightness: "Luminosité",
-    
+    pinnedColor: "Couleur épinglée",
+
     total: "Total",
     start: "Début",
     end: "Fin",
     rate: "Taux",
     curve: "Courbe",
     longPathInterpolation: "Interpolation de chemin long",
+    enablePinnedColor: "Épingler une couleur spécifique",
+    hexValue: "Valeur hexadécimale",
     
     luminance: "Luminance",
     satBri: "Sat × Lum",
@@ -205,18 +217,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Color Guru",
     reset: "Zurücksetzen",
     export: "Exportieren",
-    
+
     numberOfColors: "Anzahl der Farben",
     hue: "Farbton",
     saturation: "Sättigung",
     brightness: "Helligkeit",
-    
+    pinnedColor: "Angeheftete farbe",
+
     total: "Gesamt",
     start: "Start",
     end: "Ende",
     rate: "Rate",
     curve: "Kurve",
     longPathInterpolation: "Lange Pfad Interpolation",
+    enablePinnedColor: "Eine bestimmte Farbe anheften",
+    hexValue: "Hex-Wert",
     
     luminance: "Luminanz",
     satBri: "Sätt × Hell",
@@ -253,18 +268,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Color Guru",
     reset: "Redefinir",
     export: "Exportar",
-    
+
     numberOfColors: "Número de cores",
     hue: "Matiz",
     saturation: "Saturação",
     brightness: "Brilho",
-    
+    pinnedColor: "Cor fixada",
+
     total: "Total",
     start: "Início",
     end: "Fim",
     rate: "Taxa",
     curve: "Curva",
     longPathInterpolation: "Interpolar no sentido mais longo",
+    enablePinnedColor: "Fixar uma cor específica",
+    hexValue: "Valor hexadecimal",
     
     luminance: "Luminância",
     satBri: "Sat × Bri",
@@ -301,18 +319,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ 色彩大师",
     reset: "重置",
     export: "导出",
-    
+
     numberOfColors: "颜色数量",
     hue: "色相",
     saturation: "饱和度",
     brightness: "亮度",
-    
+    pinnedColor: "固定颜色",
+
     total: "总计",
     start: "开始",
     end: "结束",
     rate: "比率",
     curve: "曲线",
     longPathInterpolation: "长路径插值",
+    enablePinnedColor: "固定特定颜色",
+    hexValue: "十六进制值",
     
     luminance: "明度",
     satBri: "饱和 × 亮度",
@@ -349,18 +370,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ カラーグル",
     reset: "リセット",
     export: "エクスポート",
-    
+
     numberOfColors: "色の数",
     hue: "色相",
     saturation: "彩度",
     brightness: "明度",
-    
+    pinnedColor: "固定色",
+
     total: "合計",
     start: "開始",
     end: "終了",
     rate: "レート",
     curve: "曲線",
     longPathInterpolation: "長経路補間",
+    enablePinnedColor: "特定の色を固定",
+    hexValue: "16進数値",
     
     luminance: "輝度",
     satBri: "彩度 × 明度",
@@ -397,18 +421,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ रंग गुरु",
     reset: "रीसेट",
     export: "निर्यात",
-    
+
     numberOfColors: "रंगों की संख्या",
     hue: "रंग",
     saturation: "संतृप्ति",
     brightness: "चमक",
-    
+    pinnedColor: "निश्चित रंग",
+
     total: "कुल",
     start: "शुरू",
     end: "अंत",
     rate: "दर",
     curve: "वक्र",
     longPathInterpolation: "लंबा पथ इंटरपोलेशन",
+    enablePinnedColor: "एक विशिष्ट रंग निश्चित करें",
+    hexValue: "हेक्स मान",
     
     luminance: "प्रकाश",
     satBri: "सैट × चमक",
@@ -445,18 +472,21 @@ export const translations: Record<string, TranslationKeys> = {
     appName: "🌈️ Цветовой Гуру",
     reset: "Сброс",
     export: "Экспорт",
-    
+
     numberOfColors: "Количество Цветов",
     hue: "Оттенок",
     saturation: "Насыщенность",
     brightness: "Яркость",
-    
+    pinnedColor: "Закрепленный Цвет",
+
     total: "Всего",
     start: "Начало",
     end: "Конец",
     rate: "Скорость",
     curve: "Кривая",
     longPathInterpolation: "Интерполяция длинного пути",
+    enablePinnedColor: "Закрепить определенный цвет",
+    hexValue: "Шестнадцатеричное значение",
     
     luminance: "Светимость",
     satBri: "Нас × Ярк",
