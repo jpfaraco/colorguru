@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import "./App.css";
 import { Graph } from "./components/Graph";
 import BezierEditor from "./components/BezierEditor";
@@ -59,8 +59,31 @@ function App() {
 
   const [activeGraph, setActiveGraph] = useState<"hue" | "saturation" | "brightness" | "luminance" | "sat-bri">("hue");
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set(["steps", "pinned", "hue", "saturation", "brightness"]));
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set(["steps", "pinned", "saturation", "brightness"]));
   const [language, setLanguage] = useState("en");
+
+  // Auto-expand corresponding sidebar section when graph tab changes
+  useEffect(() => {
+    setCollapsedSections((prev) => {
+      const newSet = new Set(prev);
+
+      if (activeGraph === "sat-bri") {
+        // Expand both saturation and brightness
+        newSet.add("hue");
+        newSet.delete("saturation");
+        newSet.delete("brightness");
+      } else if (activeGraph === "hue" || activeGraph === "saturation" || activeGraph === "brightness") {
+        // Collapse all parameter sections
+        newSet.add("hue");
+        newSet.add("saturation");
+        newSet.add("brightness");
+        // Expand the selected one
+        newSet.delete(activeGraph);
+      }
+
+      return newSet;
+    });
+  }, [activeGraph]);
 
   // Generate palette data
   const paletteData = useMemo(() => {
