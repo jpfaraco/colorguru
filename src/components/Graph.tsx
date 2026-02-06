@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { PaletteData } from "../utils/paletteGenerator";
 import { getTranslation } from "../utils/translations";
-import { Pin } from "lucide-react";
 import { HSL } from "../utils/colorMath";
 import "./Graph.css";
 
