@@ -22,47 +22,16 @@
   gap: calc(var(--spacing-unit) * 1.5);
 }
 
-.bezier-inputs label {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--spacing-unit) * 0.75);
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
-  margin-top: 0;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.bezier-inputs label:nth-child(1),
-.bezier-inputs label:nth-child(2) {
-  color: var(--text-secondary);
-}
-
-.bezier-inputs label:nth-child(3),
-.bezier-inputs label:nth-child(4) {
-  color: var(--text-secondary);
+/* Hide number input spinners */
+.bezier-inputs input[type="number"]::-webkit-inner-spin-button,
+.bezier-inputs input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .bezier-inputs input[type="number"] {
-  padding: calc(var(--spacing-unit) * 0.875) calc(var(--spacing-unit) * 1);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: var(--primary-bg);
-  color: var(--text-primary);
-  font-size: 0.75rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.bezier-inputs input[type="number"]:hover {
-  border-color: var(--text-tertiary);
-}
-
-.bezier-inputs input[type="number"]:focus {
-  outline: none;
-  border-color: var(--focus-ring);
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.08);
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .handle {

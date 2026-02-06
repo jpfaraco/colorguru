@@ -9,6 +9,13 @@ import { generatePalette } from "./utils/paletteGenerator";
 import { getTranslation, languageOptions } from "./utils/translations";
 import { ChevronDown } from "lucide-react";
 import { HSL } from "./utils/colorMath";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Label } from "./components/ui/label";
+import { Checkbox } from "./components/ui/checkbox";
+import { Toaster } from "./components/ui/sonner";
 
 // Types
 export interface ColorState {
@@ -158,20 +165,23 @@ function App() {
         <h1>{t("appName")}</h1>
         <div className="header-actions">
           <div className="language-selector">
-            <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-              {languageOptions.map((option) => (
-                <option key={option.code} value={option.code}>
-                  {option.flag} {option.name}
-                </option>
-              ))}
-            </select>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {languageOptions.map((option) => (
+                  <SelectItem key={option.code} value={option.code}>
+                    {option.flag} {option.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <button className="reset-btn" onClick={handleReset}>
+          <Button variant="outline" onClick={handleReset}>
             {t("reset")}
-          </button>
-          <button className="share-btn" onClick={() => setIsExportModalOpen(true)}>
-            {t("export")}
-          </button>
+          </Button>
+          <Button onClick={() => setIsExportModalOpen(true)}>{t("export")}</Button>
         </div>
       </header>
 
@@ -215,9 +225,11 @@ function App() {
               </div>
               <div className={`section-content ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>
                 <div className="control-group">
-                  <label>{t("hexValue")}</label>
-                  <input
+                  <Label htmlFor="pinned-color">{t("hexValue")}</Label>
+                  <Input
+                    id="pinned-color"
                     type="text"
+                    className="font-mono"
                     value={colorState.pinnedColor || ""}
                     onChange={(e) => {
                       const value = e.target.value.trim();
@@ -227,14 +239,6 @@ function App() {
                         pinnedHSL: undefined, // Clear HSL when manually typing (will be converted from hex)
                         pinnedIndex: undefined, // Clear index when manually typing
                       }));
-                    }}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      fontFamily: "monospace",
-                      fontSize: "14px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
                     }}
                   />
                 </div>
@@ -290,29 +294,28 @@ function App() {
                   </div>
                 </div>
                 <div className="control-group">
-                  <div className="checkbox-container">
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={colorState.hue.longPath}
-                        onChange={(e) =>
-                          setColorState((prev) => ({
-                            ...prev,
-                            hue: { ...prev.hue, longPath: e.target.checked },
-                          }))
-                        }
-                      />
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="longPath"
+                      checked={colorState.hue.longPath}
+                      onCheckedChange={(checked) =>
+                        setColorState((prev) => ({
+                          ...prev,
+                          hue: { ...prev.hue, longPath: checked as boolean },
+                        }))
+                      }
+                    />
+                    <Label htmlFor="longPath" className="cursor-pointer">
                       {t("longPathInterpolation")}
-                    </label>
+                    </Label>
                   </div>
                 </div>
                 <div className="control-group">
                   <label>{t("curve")}</label>
-                  <select
+                  <Select
                     value={colorState.hue.curve}
-                    onChange={(e) =>
+                    onValueChange={(curve) =>
                       setColorState((prev) => {
-                        const curve = e.target.value;
                         const preset = CURVE_PRESETS[curve];
                         return {
                           ...prev,
@@ -321,12 +324,17 @@ function App() {
                       })
                     }
                   >
-                    {curveNames.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {curveNames.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <BezierEditor value={colorState.hue.custom || CURVE_PRESETS[colorState.hue.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, hue: { ...prev.hue, custom } }))} />
                 </div>
               </div>
@@ -401,11 +409,10 @@ function App() {
                 </div>
                 <div className="control-group">
                   <label>{t("curve")}</label>
-                  <select
+                  <Select
                     value={colorState.saturation.curve}
-                    onChange={(e) =>
+                    onValueChange={(curve) =>
                       setColorState((prev) => {
-                        const curve = e.target.value;
                         const preset = CURVE_PRESETS[curve];
                         return {
                           ...prev,
@@ -414,12 +421,17 @@ function App() {
                       })
                     }
                   >
-                    {curveNames.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {curveNames.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <BezierEditor value={colorState.saturation.custom || CURVE_PRESETS[colorState.saturation.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, saturation: { ...prev.saturation, custom } }))} />
                 </div>
               </div>
@@ -473,11 +485,10 @@ function App() {
                 </div>
                 <div className="control-group">
                   <label>{t("curve")}</label>
-                  <select
+                  <Select
                     value={colorState.brightness.curve}
-                    onChange={(e) =>
+                    onValueChange={(curve) =>
                       setColorState((prev) => {
-                        const curve = e.target.value;
                         const preset = CURVE_PRESETS[curve];
                         return {
                           ...prev,
@@ -486,12 +497,17 @@ function App() {
                       })
                     }
                   >
-                    {curveNames.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {curveNames.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <BezierEditor value={colorState.brightness.custom || CURVE_PRESETS[colorState.brightness.curve] || { x1: 0.25, y1: 0, x2: 0.75, y2: 1 }} onChange={(custom) => setColorState((prev) => ({ ...prev, brightness: { ...prev.brightness, custom } }))} />
                 </div>
               </div>
@@ -501,24 +517,30 @@ function App() {
 
         {/* Middle Panel - Graph */}
         <div className="middle-panel">
-          <div className="graph-controls">
-            <button className={activeGraph === "hue" ? "active" : ""} onClick={() => setActiveGraph("hue")}>
-              {t("hue")}
-            </button>
-            <button className={activeGraph === "saturation" ? "active" : ""} onClick={() => setActiveGraph("saturation")}>
-              {t("saturation")}
-            </button>
-            <button className={activeGraph === "brightness" ? "active" : ""} onClick={() => setActiveGraph("brightness")}>
-              {t("brightness")}
-            </button>
-            <button className={activeGraph === "luminance" ? "active" : ""} onClick={() => setActiveGraph("luminance")}>
-              {t("luminance")}
-            </button>
-            <button className={activeGraph === "sat-bri" ? "active" : ""} onClick={() => setActiveGraph("sat-bri")}>
-              {t("satBri")}
-            </button>
-          </div>
-          <Graph paletteData={paletteData} activeGraph={activeGraph} language={language} onTogglePin={handleTogglePin} />
+          <Tabs value={activeGraph} onValueChange={(value) => setActiveGraph(value as typeof activeGraph)} className="flex flex-col h-full w-full">
+            <div className="px-4 pt-4">
+              <TabsList className="w-full grid grid-cols-5">
+                <TabsTrigger value="hue" className="">
+                  {t("hue")}
+                </TabsTrigger>
+                <TabsTrigger value="saturation" className="">
+                  {t("saturation")}
+                </TabsTrigger>
+                <TabsTrigger value="brightness" className="">
+                  {t("brightness")}
+                </TabsTrigger>
+                <TabsTrigger value="luminance" className="">
+                  {t("luminance")}
+                </TabsTrigger>
+                <TabsTrigger value="sat-bri" className="">
+                  {t("satBri")}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            <div className="flex-1">
+              <Graph paletteData={paletteData} activeGraph={activeGraph} language={language} onTogglePin={handleTogglePin} />
+            </div>
+          </Tabs>
         </div>
 
         {/* Right Panel - Palette */}
@@ -528,6 +550,7 @@ function App() {
       </div>
 
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} paletteData={paletteData} colorState={colorState} language={language} />
+      <Toaster />
     </div>
   );
 }

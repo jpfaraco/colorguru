@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { getCubicBezier } from "../utils/easingCurves";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import "./BezierEditor.css";
 
 export interface BezierValue {
@@ -139,22 +141,22 @@ export const BezierEditor: React.FC<BezierEditorProps> = ({ value, onChange, wid
       </svg>
 
       <div className="bezier-inputs">
-        <label>
-          x1
-          <input type="number" step="0.01" min={0} max={1} value={value.x1} onChange={updateField("x1")} />
-        </label>
-        <label>
-          y1
-          <input type="number" step="0.01" value={value.y1} onChange={updateField("y1")} />
-        </label>
-        <label>
-          x2
-          <input type="number" step="0.01" min={0} max={1} value={value.x2} onChange={updateField("x2")} />
-        </label>
-        <label>
-          y2
-          <input type="number" step="0.01" value={value.y2} onChange={updateField("y2")} />
-        </label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="bezier-x1" className="text-xs text-muted-foreground">x1</Label>
+          <Input id="bezier-x1" type="number" step="0.01" min={0} max={1} value={value.x1} onChange={updateField("x1")} className="h-8 text-xs" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="bezier-y1" className="text-xs text-muted-foreground">y1</Label>
+          <Input id="bezier-y1" type="number" step="0.01" value={value.y1} onChange={updateField("y1")} className="h-8 text-xs" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="bezier-x2" className="text-xs text-muted-foreground">x2</Label>
+          <Input id="bezier-x2" type="number" step="0.01" min={0} max={1} value={value.x2} onChange={updateField("x2")} className="h-8 text-xs" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="bezier-y2" className="text-xs text-muted-foreground">y2</Label>
+          <Input id="bezier-y2" type="number" step="0.01" value={value.y2} onChange={updateField("y2")} className="h-8 text-xs" />
+        </div>
       </div>
     </div>
   );

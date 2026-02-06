@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { ColorStep, copyToClipboard } from "../utils/paletteGenerator";
 import { getTranslation } from "../utils/translations";
 import { Tooltip } from "./Tooltip";
 import { Pin } from "lucide-react";
 import { HSL } from "../utils/colorMath";
+import { toast } from "sonner";
 import "./PalettePreview.css";
 
 interface PalettePreviewProps {
@@ -13,17 +14,15 @@ interface PalettePreviewProps {
 }
 
 export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = "en", onTogglePin }) => {
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-
   const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
 
-  const handleCopyHex = async (hex: string, index: number) => {
+  const handleCopyHex = async (hex: string) => {
     try {
       await copyToClipboard(hex);
-      setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 1500);
+      toast.success(t("copied"));
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
+      toast.error("Failed to copy");
     }
   };
 
@@ -74,7 +73,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
 
   return (
     <div className="palette-preview">
-      <div className="palette-colors">
+      <div className="palette-colors p-4">
         {colors.map((color, index) => {
           const textColor = getBestContrastColor(color);
           const isLightBackground = textColor === "black";
@@ -85,19 +84,19 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
               className="color-swatch"
               style={{
                 backgroundColor: color.hex,
-                ...(color.isPinned && { border: '2px solid white' }),
-                cursor: onTogglePin ? 'pointer' : 'default'
+                ...(color.isPinned && { border: "2px solid white" }),
+                cursor: onTogglePin ? "pointer" : "default",
               }}
               onClick={() => onTogglePin?.(color.hex, color.hsl)}
             >
               <div className="color-content" style={{ color: textColor === "white" ? "#ffffff" : "#000000" }}>
-                <div className="color-index" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div className="color-index" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                   {index * 10}
                   {color.isPinned && (
                     <Pin
                       size={12}
                       style={{
-                        opacity: 0.9
+                        opacity: 0.9,
                       }}
                     />
                   )}
@@ -124,14 +123,13 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
                 </div>
 
                 <span
-                  className={`color-hex ${copiedIndex === index ? "copied" : ""}`}
+                  className="color-hex"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCopyHex(color.hex, index);
+                    handleCopyHex(color.hex);
                   }}
                 >
                   {color.hex.toUpperCase()}
-                  {copiedIndex === index && <span className="copy-feedback show">{t("copied")}</span>}
                 </span>
               </div>
             </div>

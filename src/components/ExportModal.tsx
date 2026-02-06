@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import { PaletteData, exportAsCSS, exportAsJSON, exportAsPlainText, exportAsSVG, copyToClipboard } from "../utils/paletteGenerator";
 import { getTranslation } from "../utils/translations";
 import { ColorState } from "../App";
-import "./ExportModal.css";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -21,8 +30,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, palet
   const [plainTextIncludeHash, setPlainTextIncludeHash] = useState(true);
 
   const t = (key: keyof import("../utils/translations").TranslationKeys) => getTranslation(language, key);
-
-  if (!isOpen) return null;
 
   const getExportData = () => {
     switch (activeFormat) {
@@ -65,74 +72,70 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, palet
     URL.revokeObjectURL(url);
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div className="export-modal-backdrop" onClick={handleBackdropClick}>
-      <div className="export-modal">
-        <div className="export-modal-header">
-          <h2>{t("exportTitle")}</h2>
-          <button className="close-button" onClick={onClose}>
-            ×
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>{t("exportTitle")}</DialogTitle>
+        </DialogHeader>
 
-        <div className="export-format-tabs">
-          <button className={`format-tab ${activeFormat === "css" ? "active" : ""}`} onClick={() => setActiveFormat("css")}>
-            {t("css")}
-          </button>
-          <button className={`format-tab ${activeFormat === "json" ? "active" : ""}`} onClick={() => setActiveFormat("json")}>
-            {t("json")}
-          </button>
-          <button className={`format-tab ${activeFormat === "text" ? "active" : ""}`} onClick={() => setActiveFormat("text")}>
-            {t("plainText")}
-          </button>
-          <button className={`format-tab ${activeFormat === "svg" ? "active" : ""}`} onClick={() => setActiveFormat("svg")}>
-            Figma
-          </button>
-        </div>
+        <Tabs value={activeFormat} onValueChange={(value) => setActiveFormat(value as ExportFormat)} className="flex-1 flex flex-col overflow-hidden">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="css">{t("css")}</TabsTrigger>
+            <TabsTrigger value="json">{t("json")}</TabsTrigger>
+            <TabsTrigger value="text">{t("plainText")}</TabsTrigger>
+            <TabsTrigger value="svg">Figma</TabsTrigger>
+          </TabsList>
 
-        <div className="export-content">
-          <div className="export-preview">
-            <pre className="export-code">{getExportData()}</pre>
+          <div className="flex-1 overflow-auto mt-4 bg-muted/30 rounded-lg">
+            <TabsContent value="css" className="mt-0 h-full">
+              <pre className="p-4 text-xs font-mono overflow-x-auto">{getExportData()}</pre>
+            </TabsContent>
+            <TabsContent value="json" className="mt-0 h-full">
+              <pre className="p-4 text-xs font-mono overflow-x-auto">{getExportData()}</pre>
+            </TabsContent>
+            <TabsContent value="text" className="mt-0 h-full">
+              <pre className="p-4 text-xs font-mono overflow-x-auto">{getExportData()}</pre>
+            </TabsContent>
+            <TabsContent value="svg" className="mt-0 h-full">
+              <pre className="p-4 text-xs font-mono overflow-x-auto">{getExportData()}</pre>
+            </TabsContent>
           </div>
-        </div>
 
-        <div className="export-actions">
-          {activeFormat === "text" && (
-            <div className="export-options">
-              <label className="export-option">
-                <input
-                  type="checkbox"
-                  checked={plainTextNumbered}
-                  onChange={(event) => setPlainTextNumbered(event.target.checked)}
-                />
-                {t("numbered")}
-              </label>
-              <label className="export-option">
-                <input
-                  type="checkbox"
-                  checked={plainTextIncludeHash}
-                  onChange={(event) => setPlainTextIncludeHash(event.target.checked)}
-                />
-                {t("includeHash")}
-              </label>
+          <div className="mt-4 flex items-center justify-between gap-4 pt-4 border-t">
+            {activeFormat === "text" && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="numbered"
+                    checked={plainTextNumbered}
+                    onCheckedChange={(checked) => setPlainTextNumbered(checked as boolean)}
+                  />
+                  <Label htmlFor="numbered" className="cursor-pointer">
+                    {t("numbered")}
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="includeHash"
+                    checked={plainTextIncludeHash}
+                    onCheckedChange={(checked) => setPlainTextIncludeHash(checked as boolean)}
+                  />
+                  <Label htmlFor="includeHash" className="cursor-pointer">
+                    {t("includeHash")}
+                  </Label>
+                </div>
+              </div>
+            )}
+            <div className="flex gap-2 ml-auto">
+              <Button variant="outline" onClick={handleCopy} disabled={copied}>
+                {copied ? `✓ ${t("copied")}` : t("copy")}
+              </Button>
+              <Button onClick={handleDownload}>{t("downloadFile")}</Button>
             </div>
-          )}
-          <div className="export-buttons">
-            <button className="copy-button" onClick={handleCopy} disabled={copied}>
-              {copied ? `✓ ${t("copied")}` : t("copy")}
-            </button>
-            <button className="download-button" onClick={handleDownload}>
-              {t("downloadFile")}
-            </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   );
 };

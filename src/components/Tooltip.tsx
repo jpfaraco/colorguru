@@ -1,5 +1,10 @@
-import React, { useState, ReactNode } from 'react';
-import './Tooltip.css';
+import React, { ReactNode } from 'react';
+import {
+  Tooltip as ShadcnTooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 interface TooltipProps {
   content: string;
@@ -8,20 +13,18 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ content, children, className = '' }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
   return (
-    <div 
-      className={`tooltip-container ${className}`}
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-    >
-      {children}
-      {isVisible && (
-        <div className="tooltip-content">
-          {content}
-        </div>
-      )}
-    </div>
+    <TooltipProvider delayDuration={200}>
+      <ShadcnTooltip>
+        <TooltipTrigger asChild>
+          <div className={className}>
+            {children}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{content}</p>
+        </TooltipContent>
+      </ShadcnTooltip>
+    </TooltipProvider>
   );
 };
