@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { ColorStep, copyToClipboard } from "../utils/paletteGenerator";
 import { getTranslation } from "../utils/translations";
 import { Tooltip } from "./Tooltip";
+import { Pin } from "lucide-react";
+import { HSL } from "../utils/colorMath";
 import "./PalettePreview.css";
 
 interface PalettePreviewProps {
   colors: ColorStep[];
   language?: string;
-  onTogglePin?: (hexColor: string) => void;
+  onTogglePin?: (hexColor: string, hsl?: HSL) => void;
 }
 
 export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language = "en", onTogglePin }) => {
@@ -44,19 +46,22 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
     }
   };
 
-  const getWcagBadgeColor = (level: string) => {
-    switch (level) {
-      case "AAA":
-        return "#428d1c";
-      case "AA":
-        return "#e0b700";
-      case "A":
-        return "#e0b700";
-      case "Fail":
-        return "#bf321f";
-      default:
-        return "#428d1c";
-    }
+  const getWcagBadgeClass = (level: string, isLightBackground: boolean) => {
+    const base = (() => {
+      switch (level) {
+        case "AAA":
+          return "wcag-aaa";
+        case "AA":
+          return "wcag-aa";
+        case "A":
+          return "wcag-a";
+        case "Fail":
+          return "wcag-fail";
+        default:
+          return "wcag-aaa";
+      }
+    })();
+    return isLightBackground ? `${base}-light` : base;
   };
 
   if (!colors.length) {
@@ -72,6 +77,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
       <div className="palette-colors">
         {colors.map((color, index) => {
           const textColor = getBestContrastColor(color);
+          const isLightBackground = textColor === "black";
 
           return (
             <div
@@ -82,18 +88,26 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
                 ...(color.isPinned && { border: '2px solid white' }),
                 cursor: onTogglePin ? 'pointer' : 'default'
               }}
-              onClick={() => onTogglePin?.(color.hex)}
+              onClick={() => onTogglePin?.(color.hex, color.hsl)}
             >
               <div className="color-content" style={{ color: textColor === "white" ? "#ffffff" : "#000000" }}>
-                <div className="color-index">
+                <div className="color-index" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   {index * 10}
+                  {color.isPinned && (
+                    <Pin
+                      size={12}
+                      style={{
+                        opacity: 0.9
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div className="contrast-scores">
                   <div className="contrast-score">
                     <span className="contrast-value contrast-value-white">{color.contrastRatioWhite.toFixed(2)}</span>
                     <Tooltip content={getWcagTooltip(color.wcagWhite)}>
-                      <div className="wcag-badge" style={{ backgroundColor: getWcagBadgeColor(color.wcagWhite) }}>
+                      <div className={`wcag-badge ${getWcagBadgeClass(color.wcagWhite, isLightBackground)}`}>
                         <span>{color.wcagWhite}</span>
                       </div>
                     </Tooltip>
@@ -102,7 +116,7 @@ export const PalettePreview: React.FC<PalettePreviewProps> = ({ colors, language
                   <div className="contrast-score">
                     <span className="contrast-value contrast-value-black">{color.contrastRatioBlack.toFixed(2)}</span>
                     <Tooltip content={getWcagTooltip(color.wcagBlack)}>
-                      <div className="wcag-badge" style={{ backgroundColor: getWcagBadgeColor(color.wcagBlack) }}>
+                      <div className={`wcag-badge ${getWcagBadgeClass(color.wcagBlack, isLightBackground)}`}>
                         <span>{color.wcagBlack}</span>
                       </div>
                     </Tooltip>

@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import { PaletteData } from "../utils/paletteGenerator";
 import { getTranslation } from "../utils/translations";
+import { Pin } from "lucide-react";
+import { HSL } from "../utils/colorMath";
 import "./Graph.css";
 
 interface GraphProps {
@@ -9,7 +11,7 @@ interface GraphProps {
   width?: number;
   height?: number;
   language?: string;
-  onTogglePin?: (hexColor: string) => void;
+  onTogglePin?: (hexColor: string, hsl?: HSL) => void;
 }
 
 export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 600, height = 400, language = "en", onTogglePin }) => {
@@ -79,6 +81,7 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
   const padding = { top: 80, right: 80, bottom: 80, left: 80 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
+  const circleRadius = 22; // Half of 2.75rem (44px)
 
   // Calculate points for the curve
   const points = useMemo(() => {
@@ -88,16 +91,20 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
     if (activeGraph === "sat-bri" && "yValues" in graphData) {
       return graphData.values.map((xValue, index) => {
         const yValue = graphData.yValues![index];
-        const x = padding.left + ((xValue - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * chartWidth;
-        const y = padding.top + chartHeight - ((yValue - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!)) * chartHeight;
+        const effectiveWidth = chartWidth - circleRadius * 2;
+        const effectiveHeight = chartHeight - circleRadius * 2;
+        const x = padding.left + circleRadius + ((xValue - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * effectiveWidth;
+        const y = padding.top + circleRadius + effectiveHeight - ((yValue - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!)) * effectiveHeight;
         return { x, y, value: xValue, yValue, index };
       });
     }
 
     // Handle regular line graphs (equal x-spacing)
     return graphData.values.map((value, index) => {
-      const x = padding.left + (index / (graphData.values.length - 1)) * chartWidth;
-      const y = padding.top + chartHeight - ((value - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * chartHeight;
+      const effectiveWidth = chartWidth - circleRadius * 2;
+      const effectiveHeight = chartHeight - circleRadius * 2;
+      const x = padding.left + circleRadius + (index / (graphData.values.length - 1)) * effectiveWidth;
+      const y = padding.top + circleRadius + effectiveHeight - ((value - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * effectiveHeight;
       return { x, y, value, index };
     });
   }, [activeGraph, graphData, chartWidth, chartHeight, padding]);
@@ -112,25 +119,25 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
     );
   }
 
+  // Calculate inset percentages for axis alignment
+  const insetPercentX = (circleRadius / chartWidth) * 100;
+  const insetPercentY = (circleRadius / chartHeight) * 100;
+
   return (
     <div className="graph-container">
       <h3 className="graph-title">{graphData.label}</h3>
       <div className="graph-content">
-        {/* Axis lines and labels */}
+        {/* Grid lines */}
         <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="graph-axes-svg" style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}>
-          {/* Y-axis line */}
-          <line x1="0" y1="0" x2="0" y2="100" stroke="#9ca3af" strokeWidth="0.2" />
-
-          {/* X-axis line (only for XY plot) */}
-          {activeGraph === "sat-bri" && <line x1="0" y1="100" x2="100" y2="100" stroke="#9ca3af" strokeWidth="0.2" />}
-
-          {/* Grid lines and labels for XY plot */}
+          {/* Grid lines for XY plot */}
           {activeGraph === "sat-bri" && (
             <>
               {[0, 20, 40, 60, 80, 100].map((value) => {
-                // Convert to percentage coordinates (same as dot positioning)
-                const xPercent = ((value - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * 100;
-                const yPercent = 100 - ((value - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!)) * 100;
+                // Convert to percentage coordinates accounting for circle inset
+                const normalizedX = (value - graphData.minValue) / (graphData.maxValue - graphData.minValue);
+                const normalizedY = (value - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!);
+                const xPercent = insetPercentX + normalizedX * (100 - 2 * insetPercentX);
+                const yPercent = 100 - insetPercentY - normalizedY * (100 - 2 * insetPercentY);
 
                 return (
                   <g key={`grid-${value}`}>
@@ -144,16 +151,16 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
             </>
           )}
 
-          {/* Y-axis tick marks for single-value graphs */}
+          {/* Horizontal grid lines for single-value graphs */}
           {activeGraph !== "sat-bri" && (
             <>
               {[0, 25, 50, 75, 100].map((percent, index) => {
-                // Convert to percentage coordinates (inverted Y for SVG)
-                const yPercent = 100 - percent;
+                // Convert to percentage coordinates accounting for circle inset
+                const yPercent = 100 - insetPercentY - (percent / 100) * (100 - 2 * insetPercentY);
 
                 return (
-                  <g key={`y-tick-${index}`}>
-                    <line x1="-1" y1={yPercent} x2="0" y2={yPercent} stroke="#9ca3af" strokeWidth="0.2" />
+                  <g key={`grid-${index}`}>
+                    <line x1="0" y1={yPercent} x2="100" y2={yPercent} stroke="#f3f4f6" strokeWidth="0.2" />
                   </g>
                 );
               })}
@@ -166,7 +173,8 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
           <>
             {/* X-axis labels */}
             {[0, 20, 40, 60, 80, 100].map((value) => {
-              const leftPercent = ((value - graphData.minValue) / (graphData.maxValue - graphData.minValue)) * 100;
+              const normalizedX = (value - graphData.minValue) / (graphData.maxValue - graphData.minValue);
+              const leftPercent = insetPercentX + normalizedX * (100 - 2 * insetPercentX);
               return (
                 <div
                   key={`x-label-${value}`}
@@ -186,7 +194,8 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
             })}
             {/* Y-axis labels */}
             {[0, 20, 40, 60, 80, 100].map((value) => {
-              const bottomPercent = ((value - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!)) * 100;
+              const normalizedY = (value - graphData.yMinValue!) / (graphData.yMaxValue! - graphData.yMinValue!);
+              const bottomPercent = insetPercentY + normalizedY * (100 - 2 * insetPercentY);
               return (
                 <div
                   key={`y-label-${value}`}
@@ -224,7 +233,7 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
             <div
               style={{
                 position: "absolute",
-                left: "-70px",
+                left: "-85px",
                 top: "50%",
                 transform: "translateY(-50%) rotate(-90deg)",
                 fontSize: "14px",
@@ -245,7 +254,7 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
             {[0, 25, 50, 75, 100].map((percent, index) => {
               const actualValue = graphData.minValue + (graphData.maxValue - graphData.minValue) * (percent / 100);
               const displayValue = Math.round(actualValue);
-              const bottomPercent = percent;
+              const bottomPercent = insetPercentY + (percent / 100) * (100 - 2 * insetPercentY);
 
               return (
                 <div
@@ -288,10 +297,10 @@ export const Graph: React.FC<GraphProps> = ({ paletteData, activeGraph, width = 
                 left: `${leftPercent}%`,
                 bottom: `${bottomPercent}%`,
                 backgroundColor: colors[i]?.hex || "#8b5cf6",
-                ...(colors[i]?.isPinned && { boxShadow: '0 0 0 2px #ffffff, 0 0 0 4px rgba(0, 0, 0, 0.3)' }),
-                cursor: onTogglePin ? 'pointer' : 'default'
+                ...(colors[i]?.isPinned && { boxShadow: "0 0 0 2px #ffffff, 0 0 0 4px rgba(0, 0, 0, 0.3)" }),
+                cursor: onTogglePin ? "pointer" : "default",
               }}
-              onClick={() => onTogglePin?.(colors[i]?.hex)}
+              onClick={() => onTogglePin?.(colors[i]?.hex, colors[i]?.hsl)}
             >
               <div className="dot-value" style={{ color: textColor }}>
                 {activeGraph === "sat-bri" ? `${Math.round(point.value)}, ${Math.round((point as any).yValue || 0)}` : Math.round(point.value)}

@@ -7,6 +7,8 @@ import { PalettePreview } from "./components/PalettePreview";
 import { ExportModal } from "./components/ExportModal";
 import { generatePalette } from "./utils/paletteGenerator";
 import { getTranslation, languageOptions } from "./utils/translations";
+import { ChevronDown } from "lucide-react";
+import { HSL } from "./utils/colorMath";
 
 // Types
 export interface ColorState {
@@ -32,6 +34,7 @@ export interface ColorState {
     custom?: { x1: number; y1: number; x2: number; y2: number };
   };
   pinnedColor?: string;
+  pinnedHSL?: HSL;
   pinnedIndex?: number;
 }
 
@@ -134,7 +137,7 @@ function App() {
   };
 
   // Toggle pin/unpin for a color
-  const handleTogglePin = (hexColor: string) => {
+  const handleTogglePin = (hexColor: string, hsl?: HSL) => {
     setColorState((prev) => {
       // Normalize hex colors for comparison (case-insensitive)
       const normalizedHex = hexColor.toLowerCase();
@@ -142,10 +145,10 @@ function App() {
 
       // If clicking the already pinned color, unpin it
       if (normalizedPinnedColor === normalizedHex) {
-        return { ...prev, pinnedColor: undefined, pinnedIndex: undefined };
+        return { ...prev, pinnedColor: undefined, pinnedHSL: undefined, pinnedIndex: undefined };
       }
-      // Otherwise, pin this color (without storing index - let similarity algorithm position it)
-      return { ...prev, pinnedColor: normalizedHex, pinnedIndex: undefined };
+      // Otherwise, pin this color (store original HSL if provided to avoid conversion precision loss)
+      return { ...prev, pinnedColor: normalizedHex, pinnedHSL: hsl, pinnedIndex: undefined };
     });
   };
 
@@ -179,7 +182,7 @@ function App() {
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("steps")}>
                 <h3>{t("numberOfColors")}</h3>
-                <span className={`collapse-icon ${collapsedSections.has("steps") ? "collapsed" : ""}`}>▼</span>
+                <ChevronDown className={`collapse-icon ${collapsedSections.has("steps") ? "collapsed" : ""}`} />
               </div>
               <div className={`section-content ${collapsedSections.has("steps") ? "collapsed" : ""}`}>
                 <div className="control-group">
@@ -208,7 +211,7 @@ function App() {
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("pinned")}>
                 <h3>{t("pinnedColor")}</h3>
-                <span className={`collapse-icon ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>▼</span>
+                <ChevronDown className={`collapse-icon ${collapsedSections.has("pinned") ? "collapsed" : ""}`} />
               </div>
               <div className={`section-content ${collapsedSections.has("pinned") ? "collapsed" : ""}`}>
                 <div className="control-group">
@@ -221,10 +224,10 @@ function App() {
                       setColorState((prev) => ({
                         ...prev,
                         pinnedColor: value || undefined,
+                        pinnedHSL: undefined, // Clear HSL when manually typing (will be converted from hex)
                         pinnedIndex: undefined, // Clear index when manually typing
                       }));
                     }}
-                    placeholder="#72B3D9"
                     style={{
                       width: "100%",
                       padding: "8px",
@@ -241,7 +244,7 @@ function App() {
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("hue")}>
                 <h3>{t("hue")}</h3>
-                <span className={`collapse-icon ${collapsedSections.has("hue") ? "collapsed" : ""}`}>▼</span>
+                <ChevronDown className={`collapse-icon ${collapsedSections.has("hue") ? "collapsed" : ""}`} />
               </div>
               <div className={`section-content ${collapsedSections.has("hue") ? "collapsed" : ""}`}>
                 <div className="control-group">
@@ -332,7 +335,7 @@ function App() {
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("saturation")}>
                 <h3>{t("saturation")}</h3>
-                <span className={`collapse-icon ${collapsedSections.has("saturation") ? "collapsed" : ""}`}>▼</span>
+                <ChevronDown className={`collapse-icon ${collapsedSections.has("saturation") ? "collapsed" : ""}`} />
               </div>
               <div className={`section-content ${collapsedSections.has("saturation") ? "collapsed" : ""}`}>
                 <div className="control-group">
@@ -425,7 +428,7 @@ function App() {
             <div className="control-section">
               <div className="section-header-collapsible" onClick={() => toggleSection("brightness")}>
                 <h3>{t("brightness")}</h3>
-                <span className={`collapse-icon ${collapsedSections.has("brightness") ? "collapsed" : ""}`}>▼</span>
+                <ChevronDown className={`collapse-icon ${collapsedSections.has("brightness") ? "collapsed" : ""}`} />
               </div>
               <div className={`section-content ${collapsedSections.has("brightness") ? "collapsed" : ""}`}>
                 <div className="control-group">

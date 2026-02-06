@@ -8,7 +8,6 @@
 .palette-colors {
   flex: 1;
   overflow-y: auto;
-  border-radius: 0.5rem;
 }
 
 .palette-placeholder {
@@ -21,14 +20,18 @@
 }
 
 .color-swatch {
-  height: 50px;
+  height: 56px;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.color-swatch:hover {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 .color-swatch:last-child {
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  border-bottom: none;
 }
 
 .color-content {
@@ -37,136 +40,122 @@
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
+  gap: calc(var(--spacing-unit) * 2);
+  padding: 0 calc(var(--spacing-unit) * 3);
 }
 
 .color-index {
   flex: 1 0 auto;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   min-width: 0;
   min-height: 1px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
 }
 
 .contrast-scores {
   display: flex;
-  gap: 16px;
+  gap: calc(var(--spacing-unit) * 3);
+  align-items: center;
 }
 
 .contrast-score {
-  width: 80px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: calc(var(--spacing-unit) * 1);
 }
 
 .contrast-value {
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 0.75rem;
+  font-weight: 500;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
 }
 
 .contrast-value-white {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .contrast-value-black {
-  color: #000000;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .wcag-badge {
-  height: 20px;
-  width: 32px;
+  min-width: 32px;
+  height: 18px;
   border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 8px;
+  padding: 0 calc(var(--spacing-unit) * 0.75);
+  backdrop-filter: blur(4px);
 }
 
 .wcag-badge span {
-  font-size: 10px;
-  font-weight: 700;
-  color: white;
+  font-size: 0.625rem;
+  font-weight: 600;
   white-space: nowrap;
-}
-
-.wcag-badge[style*="rgb(224, 183, 0)"] span {
-  color: #1a1600;
+  letter-spacing: 0.02em;
 }
 
 .color-hex {
-  font-size: 12px;
-  font-weight: 700;
-  font-family: "JetBrains Mono", "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: "JetBrains Mono", "SF Mono", "Monaco", "Consolas", monospace;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   white-space: nowrap;
   text-align: right;
   min-width: 70px;
+  opacity: 0.85;
+  letter-spacing: -0.01em;
 }
 
 .color-hex:hover {
-  opacity: 0.8;
+  opacity: 1;
+  transform: translateX(-2px);
 }
 
 .color-hex.copied {
-  transform: scale(1.1);
-  animation: copyPulse 0.6s ease-out;
+  transform: scale(1.05);
+  animation: copyPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes copyPulse {
   0% {
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.85;
   }
   50% {
-    transform: scale(1.15);
-    opacity: 0.8;
+    transform: scale(1.08);
+    opacity: 1;
   }
   100% {
-    transform: scale(1.1);
+    transform: scale(1.05);
     opacity: 1;
   }
 }
 
 .copy-feedback {
   position: absolute;
+  top: -2.5rem;
   right: 0;
-  top: -20px;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--accent-color);
   color: white;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-}
-
-.copy-feedback.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.copy-feedback {
-  position: absolute;
-  top: -2rem;
-  right: 0;
-  background: rgba(34, 197, 94, 0.9);
-  color: white;
-  padding: 0.25rem 0.5rem;
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.25);
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   pointer-events: none;
   opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
+  transform: translateY(8px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .copy-feedback.show {
@@ -177,30 +166,59 @@
 .wcag-rating {
   padding: 0.125rem 0.375rem;
   border-radius: 3px;
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.04em;
 }
 
 .wcag-aaa {
-  background: rgba(34, 197, 94, 0.8);
-  color: white;
+  background: rgba(0, 0, 0, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .wcag-aa {
-  background: rgba(245, 158, 11, 0.8);
-  color: white;
+  background: rgba(0, 0, 0, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .wcag-a {
-  background: rgba(239, 68, 68, 0.8);
-  color: white;
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .wcag-fail {
-  background: rgba(220, 38, 38, 0.8);
-  color: white;
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Light background variants */
+.wcag-aaa-light {
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.wcag-aa-light {
+  background: rgba(255, 255, 255, 0.85);
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.wcag-a-light {
+  background: rgba(255, 255, 255, 0.75);
+  color: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.wcag-fail-light {
+  background: rgba(255, 255, 255, 0.65);
+  color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .color-hsl {
@@ -223,27 +241,31 @@
   font-size: 0.625rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.04em;
 }
 
 .accessibility-badge.aaa {
-  background: #22c55e;
-  color: white;
+  background: rgba(0, 0, 0, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .accessibility-badge.aa {
-  background: #f59e0b;
-  color: white;
+  background: rgba(0, 0, 0, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .accessibility-badge.a {
-  background: #ef4444;
-  color: white;
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .accessibility-badge.fail {
-  background: #dc2626;
-  color: white;
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .contrast-ratio {

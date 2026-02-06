@@ -4,48 +4,75 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(26, 29, 35, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .export-modal {
   background: var(--primary-bg);
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 600px;
+  max-width: 640px;
   height: min(80vh, 600px);
   display: flex;
   flex-direction: column;
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-subtle);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .export-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .export-modal-header h2 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .close-button {
   background: none;
   border: none;
-  font-size: 1.5rem;
-  color: var(--text-secondary);
+  font-size: 1.25rem;
+  color: var(--text-tertiary);
   cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: all 0.2s;
+  padding: calc(var(--spacing-unit) * 1);
+  border-radius: 6px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   width: 32px;
   height: 32px;
   display: flex;
@@ -54,37 +81,39 @@
 }
 
 .close-button:hover {
-  background-color: var(--secondary-bg);
+  background-color: var(--accent-subtle);
   color: var(--text-primary);
 }
 
 .export-format-tabs {
   display: flex;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--secondary-bg);
 }
 
 .format-tab {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: calc(var(--spacing-unit) * 1.75) calc(var(--spacing-unit) * 2);
   background: none;
   border: none;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
   font-weight: 500;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   border-bottom: 2px solid transparent;
 }
 
 .format-tab:hover {
-  background-color: var(--secondary-bg);
-  color: var(--text-primary);
+  background-color: var(--accent-subtle);
+  color: var(--text-secondary);
 }
 
 .format-tab.active {
-  color: var(--accent-color);
-  background-color: var(--secondary-bg);
-  border-bottom-color: var(--accent-color);
+  color: var(--text-primary);
+  background-color: transparent;
+  border-bottom-color: var(--text-primary);
 }
 
 .export-content {
@@ -97,83 +126,96 @@
 .export-preview {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
-  background-color: var(--secondary-bg);
+  padding: calc(var(--spacing-unit) * 3);
+  background-color: var(--tertiary-bg);
   min-height: 0;
 }
 
 .export-code {
   margin: 0;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-family: "JetBrains Mono", "Monaco", "Consolas", "Courier New", monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: #2d3748;
+  padding: calc(var(--spacing-unit) * 2.5);
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  font-family: "JetBrains Mono", "SF Mono", "Monaco", "Consolas", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
   overflow-x: auto;
+  letter-spacing: -0.01em;
 }
 
 .export-actions {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border-color);
+  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 4);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
-  gap: 0.75rem;
+  gap: calc(var(--spacing-unit) * 2);
   align-items: center;
 }
 
 .export-options {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: calc(var(--spacing-unit) * 2);
 }
 
 .export-option {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: calc(var(--spacing-unit) * 1);
   font-size: 0.8125rem;
   color: var(--text-secondary);
+  font-weight: 450;
 }
 
 .export-option input {
   width: 16px;
   height: 16px;
+  cursor: pointer;
 }
 
 .export-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: calc(var(--spacing-unit) * 1.5);
   margin-left: auto;
 }
 
 .copy-button,
 .download-button {
-  padding: 0.625rem 1.25rem;
+  padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 2.5);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
   font-weight: 500;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .copy-button {
   background: var(--primary-bg);
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
 .copy-button:hover:not(:disabled) {
-  background: var(--secondary-bg);
+  background: var(--accent-subtle);
+  color: var(--text-primary);
+  border-color: var(--text-tertiary);
 }
 
 .copy-button:disabled {
   background: var(--accent-color);
   color: white;
+  border-color: var(--accent-color);
   cursor: default;
+}
+
+.copy-button:focus,
+.download-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.08);
 }
 
 .download-button {

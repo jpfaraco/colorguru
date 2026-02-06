@@ -9,16 +9,30 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 8px;
-  background: rgba(0, 0, 0, 0.9);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  background: rgba(26, 29, 35, 0.95);
   color: white;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+  border-radius: 6px;
+  font-size: 0.6875rem;
   font-weight: 500;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  animation: tooltipFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .tooltip-content::after {
@@ -29,11 +43,6 @@
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border: 6px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.9);
-}
-
-/* Ensure tooltips work well on different backgrounds */
-.tooltip-content {
-  backdrop-filter: blur(2px);
+  border: 5px solid transparent;
+  border-top-color: rgba(26, 29, 35, 0.95);
 }

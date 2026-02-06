@@ -59,7 +59,7 @@ function findInsertPosition(pinnedHSL: HSL, colors: ColorStep[]): number {
 }
 
 export function generatePalette(colorState: ColorState): PaletteData {
-  const { steps, hue, saturation, brightness, pinnedColor, pinnedIndex } = colorState;
+  const { steps, hue, saturation, brightness, pinnedColor, pinnedHSL, pinnedIndex } = colorState;
   const colors: ColorStep[] = [];
   const hueValues: number[] = [];
   const saturationValues: number[] = [];
@@ -132,20 +132,22 @@ export function generatePalette(colorState: ColorState): PaletteData {
   // Handle pinned color replacement (not insertion)
   // This maintains natural interpolation by replacing a generated color instead of squeezing in
   if (pinnedColor) {
-    const pinnedHSL = hexToHSL(pinnedColor);
-    if (pinnedHSL) {
-      const pinnedRGB = hslToRgb(pinnedHSL);
+    // Use stored HSL if available (from clicking a color), otherwise convert from hex (from user input)
+    // This avoids precision loss from hex->RGB->HSL conversion
+    const resolvedHSL = pinnedHSL || hexToHSL(pinnedColor);
+    if (resolvedHSL) {
+      const pinnedRGB = hslToRgb(resolvedHSL);
       const pinnedLuminance = rgbToLuminance(pinnedRGB.r, pinnedRGB.g, pinnedRGB.b);
 
       // Use provided index if available, otherwise find best position to replace
       const replacePos = pinnedIndex !== undefined
         ? Math.max(0, Math.min(pinnedIndex, colors.length - 1))
-        : findInsertPosition(pinnedHSL, colors);
+        : findInsertPosition(resolvedHSL, colors);
 
       // Create pinned color step
       const pinnedStep: ColorStep = {
         index: replacePos,
-        hsl: pinnedHSL,
+        hsl: resolvedHSL,
         rgb: pinnedRGB,
         hex: pinnedColor.toLowerCase(),
         contrastRatioWhite: getContrastRatio(pinnedRGB, WHITE_RGB),
@@ -157,9 +159,9 @@ export function generatePalette(colorState: ColorState): PaletteData {
 
       // Replace the color at that position (the "ghost" color is what was there)
       colors[replacePos] = pinnedStep;
-      hueValues[replacePos] = pinnedHSL.h;
-      saturationValues[replacePos] = pinnedHSL.s;
-      brightnessValues[replacePos] = pinnedHSL.l;
+      hueValues[replacePos] = resolvedHSL.h;
+      saturationValues[replacePos] = resolvedHSL.s;
+      brightnessValues[replacePos] = resolvedHSL.l;
       luminanceValues[replacePos] = pinnedLuminance * 100;
     }
   }
